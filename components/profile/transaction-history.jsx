@@ -15,21 +15,34 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { api } from "@/lib/axios";
+import { format } from "date-fns";
 
 export function TransactionHistory() {
   const [activeTab, setActiveTab] = useState("all");
   const [transactions, setTransactions] = useState([]);
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return format(date, "MMM d, yyyy, HH:mm ");
+  };
+
   useEffect(() => {
     // Fetch transactions from the API
     const fetchTransactions = async () => {
-      const response = await api.get("/users/last-transactions");
+      const response = await api.get("/users/transactions/recent");
       console.log(response);
       setTransactions(response);
     };
 
     fetchTransactions();
   }, []);
+
+  const isPositive = (type) => {
+    if (type === "Withdrawal") {
+      return false;
+    }
+    return true;
+  };
 
   const filteredTransactions = transactions.filter((transaction) => {
     if (activeTab === "all") return true;
@@ -133,17 +146,17 @@ export function TransactionHistory() {
                           exit="exit"
                           className="grid grid-cols-4 gap-4 p-4 text-sm hover:bg-secondary/30 transition-colors md:grid-cols-5"
                         >
-                          <div>{transaction.date}</div>
+                          <div>{formatDate(transaction.date)}</div>
                           <div className="capitalize">{transaction.type}</div>
                           <div>{transaction.description}</div>
                           <div
                             className={`text-right font-medium ${
-                              transaction.isPositive
+                              isPositive(transaction.type)
                                 ? "text-neon-cyan"
                                 : "text-red-500"
                             }`}
                           >
-                            {transaction.isPositive ? "+" : "-"}
+                            {isPositive(transaction.type) ? "+" : "-"}
                             {transaction.amount}
                           </div>
                           <div className="hidden md:block text-right">

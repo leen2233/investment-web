@@ -1,45 +1,47 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import { ArrowUpRight, ArrowDownRight, LineChart, Wallet } from "lucide-react"
-import { Card, CardContent } from "@/components/ui/card"
-import { CountUp } from "@/components/ui/count-up"
+import { motion } from "framer-motion";
+import { ArrowUpRight, ArrowDownRight, LineChart, Wallet } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { CountUp } from "@/components/ui/count-up";
 
-export function DashboardStats() {
-  const stats = [
+export function DashboardStats({ stats }) {
+  const items = [
     {
       title: "Total Balance",
-      value: 4250,
-      change: "+12.5%",
+      value: stats.balance && stats.balance.total,
+      change: `+${stats.balance ? stats.balance.more : 0}%`,
       trend: "up",
       icon: <Wallet className="h-4 w-4 text-muted-foreground" />,
       color: "blue",
     },
     {
       title: "Active Investments",
-      value: 3,
-      subtitle: "$5,250 total value",
+      value: stats.investments && stats.investments.total,
+      subtitle: `$${
+        stats.investments ? stats.investments.total_value : 0
+      } total value`,
       icon: <LineChart className="h-4 w-4 text-muted-foreground" />,
       color: "cyan",
       isCount: true,
     },
     {
       title: "Total Deposits",
-      value: 7500,
-      change: "+5.3%",
+      value: stats.deposits && stats.deposits.total,
+      change: `+${stats.deposits ? stats.deposits.more : 0}%`,
       trend: "up",
       icon: <ArrowUpRight className="h-4 w-4 text-muted-foreground" />,
       color: "purple",
     },
     {
       title: "Total Withdrawals",
-      value: 3250,
-      change: "+2.1%",
+      value: stats.withdraws && stats.withdraws.total,
+      change: `+${stats.withdraws ? stats.withdraws.more : 0}%`,
       trend: "down",
       icon: <ArrowDownRight className="h-4 w-4 text-muted-foreground" />,
       color: "blue",
     },
-  ]
+  ];
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -49,7 +51,7 @@ export function DashboardStats() {
         staggerChildren: 0.1,
       },
     },
-  }
+  };
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -60,7 +62,7 @@ export function DashboardStats() {
         duration: 0.5,
       },
     },
-  }
+  };
 
   return (
     <motion.div
@@ -69,13 +71,17 @@ export function DashboardStats() {
       initial="hidden"
       animate="visible"
     >
-      {stats.map((stat, index) => (
+      {items.map((stat, index) => (
         <motion.div key={index} variants={itemVariants}>
           <Card className="glassmorphism overflow-hidden">
-            <div className={`absolute inset-0 bg-glow-${stat.color} opacity-20`} />
+            <div
+              className={`absolute inset-0 bg-glow-${stat.color} opacity-20`}
+            />
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
-                <div className="text-sm font-medium text-muted-foreground">{stat.title}</div>
+                <div className="text-sm font-medium text-muted-foreground">
+                  {stat.title}
+                </div>
                 {stat.icon}
               </div>
               <div className="mt-2 text-2xl font-bold">
@@ -84,17 +90,24 @@ export function DashboardStats() {
               </div>
               {stat.change ? (
                 <p className="mt-1 text-xs text-muted-foreground">
-                  <span className={stat.trend === "up" ? "text-neon-cyan" : "text-red-500"}>{stat.change}</span> from
-                  last month
+                  <span
+                    className={
+                      stat.trend === "up" ? "text-neon-cyan" : "text-red-500"
+                    }
+                  >
+                    {stat.change}
+                  </span>{" "}
+                  from last month
                 </p>
               ) : (
-                <p className="mt-1 text-xs text-muted-foreground">{stat.subtitle}</p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {stat.subtitle}
+                </p>
               )}
             </CardContent>
           </Card>
         </motion.div>
       ))}
     </motion.div>
-  )
+  );
 }
-
