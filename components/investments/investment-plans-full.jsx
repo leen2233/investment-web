@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { TrendingUp, Filter, ArrowUpDown } from "lucide-react";
+import { TrendingUp } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -15,49 +15,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { RippleButton } from "@/components/ui/ripple-button";
 
-export function InvestmentPlansFull() {
+export function InvestmentPlansFull({ plans }) {
   const [hoveredPlan, setHoveredPlan] = useState(null);
-
-  const plans = [
-    {
-      title: "Daily 3% ROI",
-      description: "Low risk, stable returns",
-      roi: "3% Daily",
-      risk: "Low Risk",
-      minInvestment: "$100",
-      duration: "30 days",
-      withdrawal: "After 7 days (5% fee)",
-      totalReturn: "90% ROI",
-      progress: 65,
-      color: "blue",
-    },
-    {
-      title: "Daily 5% ROI",
-      description: "Balanced risk and reward",
-      roi: "5% Daily",
-      risk: "Medium Risk",
-      minInvestment: "$500",
-      duration: "21 days",
-      withdrawal: "After 5 days (7% fee)",
-      totalReturn: "105% ROI",
-      progress: 50,
-      color: "purple",
-      popular: true,
-    },
-    {
-      title: "Daily 7% ROI",
-      description: "Higher risk, maximum returns",
-      roi: "7% Daily",
-      risk: "High Risk",
-      minInvestment: "$1,000",
-      duration: "14 days",
-      withdrawal: "After 3 days (10% fee)",
-      totalReturn: "98% ROI",
-      progress: 20,
-      color: "cyan",
-    },
-  ];
-
+ 
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -96,6 +56,10 @@ export function InvestmentPlansFull() {
     },
   };
 
+  function capitalize(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
   return (
     <motion.div
       className="space-y-6"
@@ -108,16 +72,6 @@ export function InvestmentPlansFull() {
         variants={headerVariants}
       >
         <h2 className="text-xl font-bold">Available Plans</h2>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" className="gap-2">
-            <Filter className="h-4 w-4" />
-            Filter
-          </Button>
-          <Button variant="outline" size="sm" className="gap-2">
-            <ArrowUpDown className="h-4 w-4" />
-            Sort
-          </Button>
-        </div>
       </motion.div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -149,7 +103,7 @@ export function InvestmentPlansFull() {
               <CardHeader
                 className={`bg-gradient-to-r from-neon-${plan.color} to-neon-${plan.color}/60 text-white`}
               >
-                <CardTitle>{plan.title}</CardTitle>
+                <CardTitle>{plan.name}</CardTitle>
                 <CardDescription
                   className={`text-neon-${
                     plan.color === "purple"
@@ -167,13 +121,15 @@ export function InvestmentPlansFull() {
                 <div className="mb-4 flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <TrendingUp className={`h-5 w-5 text-neon-${plan.color}`} />
-                    <span className="text-2xl font-bold">{plan.roi}</span>
+                    <span className="text-xl font-bold">
+                      {plan.percentage}% Daily
+                    </span>
                   </div>
                   <Badge
                     variant="outline"
                     className={`bg-neon-${plan.color}/10`}
                   >
-                    {plan.risk}
+                    {capitalize(plan.risk)}
                   </Badge>
                 </div>
 
@@ -183,36 +139,45 @@ export function InvestmentPlansFull() {
                       <span className="text-muted-foreground">
                         Minimum Investment
                       </span>
-                      <span className="font-medium">{plan.minInvestment}</span>
+                      <span className="font-medium">
+                        ${plan.minimum_amount}
+                      </span>
                     </div>
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-muted-foreground">Duration</span>
-                      <span className="font-medium">{plan.duration}</span>
+                      <span className="font-medium">{plan.duration} days</span>
                     </div>
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-muted-foreground">
                         Early Withdrawal
                       </span>
-                      <span className="font-medium">{plan.withdrawal}</span>
+                      <span className="font-medium">
+                        {plan.early_withdrawal_time} days (
+                        {plan.early_withdrawal_fee}% fee)
+                      </span>
                     </div>
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-muted-foreground">
                         Total Return
                       </span>
-                      <span className="font-medium">{plan.totalReturn}</span>
+                      <span className="font-medium">
+                        {plan.percentage}% ROI
+                      </span>
                     </div>
                   </div>
 
                   <div className="pt-2">
                     <div className="mb-2 flex items-center justify-between text-sm">
                       <span>Popularity</span>
-                      <span className="font-medium">{plan.progress}%</span>
+                      <span className="font-medium">{plan.popularity}%</span>
                     </div>
                     <div className="h-2 w-full rounded-full bg-secondary">
                       <motion.div
-                        className={`h-full rounded-full bg-neon-${plan.color}`}
+                        className={`h-full rounded-full bg-neon-${
+                          plan.color === "cyan" ? "blue" : plan.color
+                        }`}
                         initial={{ width: 0 }}
-                        animate={{ width: `${plan.progress}%` }}
+                        animate={{ width: `${plan.popularity}%` }}
                         transition={{ duration: 1, delay: 0.5 }}
                       />
                     </div>

@@ -4,7 +4,7 @@ import { Clock, DollarSign } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-export function ActiveInvestments() {
+export function ActiveInvestments({ investments }) {
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -14,35 +14,80 @@ export function ActiveInvestments() {
   const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
   const y = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [50, 0, 0, 50]);
 
-  const investments = [
-    {
-      name: "Daily 5% ROI",
-      amount: "$1,000",
-      date: "Started 10 days ago",
-      timeRemaining: "11 days",
-      currentValue: "$1,500",
-      progress: 48,
-      color: "purple",
-    },
-    {
-      name: "Daily 3% ROI",
-      amount: "$500",
-      date: "Started 15 days ago",
-      timeRemaining: "15 days",
-      currentValue: "$725",
-      progress: 50,
-      color: "blue",
-    },
-    {
-      name: "Daily 7% ROI",
-      amount: "$2,000",
-      date: "Started 5 days ago",
-      timeRemaining: "9 days",
-      currentValue: "$2,700",
-      progress: 35,
-      color: "cyan",
-    },
-  ];
+  const formatRelativeTime = (timestamp) => {
+    if (!timestamp) return "";
+
+    // Parse the timestamp
+    const date = new Date(timestamp);
+    const now = new Date();
+
+    // Reset hours to compare just the dates
+    const dateWithoutTime = new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate()
+    );
+    const nowWithoutTime = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate()
+    );
+
+    // Calculate difference in days
+    const diffTime = nowWithoutTime - dateWithoutTime;
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+    // Format based on the difference
+    if (diffDays === 0) {
+      return "Today";
+    } else if (diffDays === 1) {
+      return "Yesterday";
+    } else if (diffDays < 7) {
+      return `${diffDays} days ago`;
+    } else if (diffDays < 14) {
+      return "1 week ago";
+    } else if (diffDays < 30) {
+      return `${Math.floor(diffDays / 7)} weeks ago`;
+    } else if (diffDays < 60) {
+      return "1 month ago";
+    } else if (diffDays < 365) {
+      return `${Math.floor(diffDays / 30)} months ago`;
+    } else if (diffDays < 730) {
+      return "1 year ago";
+    } else {
+      return `${Math.floor(diffDays / 365)} years ago`;
+    }
+  };
+
+  // const investments = [
+  //   {
+  //     name: "Daily 5% ROI",
+  //     amount: "$1,000",
+  //     date: "Started 10 days ago",
+  //     timeRemaining: "11 days",
+  //     currentValue: "$1,500",
+  //     progress: 48,
+  //     color: "purple",
+  //   },
+  //   {
+  //     name: "Daily 3% ROI",
+  //     amount: "$500",
+  //     date: "Started 15 days ago",
+  //     timeRemaining: "15 days",
+  //     currentValue: "$725",
+  //     progress: 50,
+  //     color: "blue",
+  //   },
+  //   {
+  //     name: "Daily 7% ROI",
+  //     amount: "$2,000",
+  //     date: "Started 5 days ago",
+  //     timeRemaining: "9 days",
+  //     currentValue: "$2,700",
+  //     progress: 35,
+  //     color: "cyan",
+  //   },
+  // ];
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -109,23 +154,24 @@ export function ActiveInvestments() {
                     <h4
                       className={`font-semibold text-neon-${investment.color}`}
                     >
-                      {investment.name}
+                      {investment.plan_name}
                     </h4>
                     <p className="text-sm text-muted-foreground">
-                      {investment.amount} {investment.date}
+                      ${investment.initial_amount} Started{" "}
+                      {formatRelativeTime(investment.start_date)}
                     </p>
                   </div>
                   <div className="flex items-center gap-4">
                     <div className="flex items-center gap-2">
                       <Clock className="h-4 w-4 text-muted-foreground" />
                       <span className="text-sm">
-                        {investment.timeRemaining} remaining
+                        {investment.days_remaining} days remaining
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
                       <DollarSign className="h-4 w-4 text-muted-foreground" />
                       <span className="text-sm font-medium">
-                        {investment.currentValue} current value
+                        {investment.current_value} current value
                       </span>
                     </div>
                   </div>
@@ -133,13 +179,19 @@ export function ActiveInvestments() {
                 <div className="mt-4">
                   <div className="mb-1 flex items-center justify-between text-sm">
                     <span>Progress</span>
-                    <span>{investment.progress}%</span>
+                    <span>
+                      {(100 / investment.duration) * investment.days_passed}%
+                    </span>
                   </div>
                   <div className="h-2 w-full rounded-full bg-secondary">
                     <motion.div
                       className={`h-full rounded-full bg-gradient-to-r from-neon-${investment.color} to-neon-${investment.color}/60`}
                       initial={{ width: 0 }}
-                      animate={{ width: `${investment.progress}%` }}
+                      animate={{
+                        width: `${
+                          (100 / investment.duration) * investment.days_passed
+                        }%`,
+                      }}
                       transition={{ duration: 1, delay: 0.2 }}
                     />
                   </div>
