@@ -17,13 +17,27 @@ export function AuthProvider({ children }) {
 
   // Check for token and user in localStorage on initial load
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const storedUser = localStorage.getItem("user");
-    if (token) {
-      checkAuth();
-    }
+    const checkAuthentication = async () => {
+      const token = localStorage.getItem("token");
+      const storedUser = localStorage.getItem("user");
 
-    setIsLoading(false);
+      if (!token) {
+        navigate("/login");
+        setIsLoading(false);
+        return;
+      }
+
+      const isAuthenticated = await checkAuth();
+      if (!isAuthenticated) {
+        navigate("/login");
+      } else if (storedUser) {
+        setUser(JSON.parse(storedUser));
+      }
+
+      setIsLoading(false);
+    };
+
+    checkAuthentication();
   }, []);
 
   // Check for referral code in URL
@@ -48,7 +62,7 @@ export function AuthProvider({ children }) {
 
     const publicRoutes = ["/register", "/login", "/error", "/"];
     const isPublicRoute = publicRoutes.some((route) =>
-      pathname.startsWith(route)
+      pathname.startsWith(route),
     );
 
     if (!user && !isPublicRoute) {
@@ -65,10 +79,10 @@ export function AuthProvider({ children }) {
         password,
         referral: referralCode,
       });
-      if (!response.data.error) {
-        localStorage.setItem("token", response.data.token);
-        localStorage.setItem("user", JSON.stringify(response.data.user));
-        setUser(response.data.user);
+      if (!response.error) {
+        localStorage.setItem("token", response.token);
+        localStorage.setItem("user", JSON.stringify(response.user));
+        setUser(response.user);
         navigate("/"); // Replaces router.push
       }
       return response.data;

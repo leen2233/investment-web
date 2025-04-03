@@ -39,6 +39,8 @@ export function RegistrationForm({ initialReferralCode = "" }) {
   const [fieldErrors, setFieldErrors] = useState({});
   const [generalError, setGeneralError] = useState(null);
 
+  const { setUser } = useAuth();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setFieldErrors({});
@@ -52,6 +54,7 @@ export function RegistrationForm({ initialReferralCode = "" }) {
       const response = await register(username, password, referralCode || null);
 
       if (response.error) {
+        console.log("error", response.error);
         // Handle non-field errors
         if (response.error.non_field_errors) {
           setGeneralError(response.error.non_field_errors[0]);
@@ -68,7 +71,16 @@ export function RegistrationForm({ initialReferralCode = "" }) {
         setFieldErrors(errors);
         setIsSubmitting(false);
       }
+      if (response.token) {
+        localStorage.setItem("token", response.token);
+
+        const userResponse = await api.get("/users/me/");
+        const userData = userResponse.data;
+        localStorage.setItem("user", JSON.stringify(userData));
+        setUser(userData);
+      }
     } catch (error) {
+      console.log(error);
       setGeneralError("An unexpected error occurred. Please try again.");
       setIsSubmitting(false);
     }

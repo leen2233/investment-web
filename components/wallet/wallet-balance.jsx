@@ -6,25 +6,25 @@ import { useAuth } from "@/contexts/auth-context";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
-export function WalletBalance() {
+export function WalletBalance({ stats }) {
   const { user } = useAuth();
 
   const balances = [
     {
       title: "Total Balance",
-      value: user?.balance || 0,
+      value: stats?.balance?.total || 0,
       icon: <Wallet className="h-5 w-5 text-neon-blue" />,
       color: "blue",
     },
     {
       title: "Total Deposits",
-      value: 7500,
+      value: stats?.deposits?.total || 0,
       icon: <ArrowUpRight className="h-5 w-5 text-neon-cyan" />,
       color: "cyan",
     },
     {
       title: "Total Withdrawals",
-      value: 3250,
+      value: stats?.withdrawals?.total || 0,
       icon: <ArrowDownRight className="h-5 w-5 text-neon-purple" />,
       color: "purple",
     },
@@ -80,24 +80,6 @@ export function WalletBalance() {
                   ${Math.floor(balance.value * 0.95)}
                 </span>
               </div>
-
-              {index === 0 && (
-                <div className="mt-4 flex gap-2">
-                  <Link href="/wallet/deposit" className="flex-1">
-                    <Button
-                      size="sm"
-                      className="w-full bg-gradient-to-r from-neon-blue to-neon-purple"
-                    >
-                      Deposit
-                    </Button>
-                  </Link>
-                  <Link href="/wallet/withdraw" className="flex-1">
-                    <Button size="sm" variant="outline" className="w-full">
-                      Withdraw
-                    </Button>
-                  </Link>
-                </div>
-              )}
             </CardContent>
           </Card>
         </motion.div>
