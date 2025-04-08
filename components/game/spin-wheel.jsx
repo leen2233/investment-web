@@ -11,6 +11,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useAuth } from "../../contexts/auth-context";
+import { api } from "../../lib/axios";
 
 export function SpinWheel() {
   const [isSpinning, setIsSpinning] = useState(false);
@@ -18,27 +20,39 @@ export function SpinWheel() {
   const [spinHistory, setSpinHistory] = useState([]);
   const [betAmount, setBetAmount] = useState(10);
   const [potentialWin, setPotentialWin] = useState(20);
+  const [showError, setShowError] = useState(false);
+  const { user, setUser } = useAuth();
 
   useEffect(() => {
     setPotentialWin(betAmount * 2);
   }, [betAmount]);
 
-  const handleSpin = () => {
+  const handleSpin = async () => {
     if (isSpinning) return;
+
+    if (betAmount > user.balance) {
+      setShowError(true);
+      // Auto hide error after 3 seconds
+      setTimeout(() => setShowError(false), 3000);
+      return;
+    }
 
     setIsSpinning(true);
     setSpinResult(null);
 
-    // Simulate spinning wheel with random result
-    const spinDuration = 3000 + Math.random() * 2000;
+    const result = await api.post("/spin-wheel", { amount: betAmount });
+    if (result.is_positive) {
+      setSpinResult(2);
+      setUser((prev) => ({ ...prev, balance: prev.balance + result.amount }));
+    } else {
+      setSpinResult(0);
+      setUser((prev) => ({ ...prev, balance: prev.balance - betAmount }));
+    }
 
-    setTimeout(() => {
-      const result = Math.random() * 100;
-      const win = result > 50;
-      setSpinResult(win ? 2 : 0);
-      setSpinHistory((prev) => [win ? 2 : 0, ...prev].slice(0, 10));
-      setIsSpinning(false);
-    }, spinDuration);
+    setSpinHistory((prev) =>
+      [result.is_positive ? 2 : 0, ...prev].slice(0, 10),
+    );
+    setIsSpinning(false);
   };
 
   const containerVariants = {
@@ -72,6 +86,32 @@ export function SpinWheel() {
         type: "spring",
         stiffness: 300,
         damping: 15,
+      },
+    },
+  };
+
+  const errorVariants = {
+    hidden: {
+      opacity: 0,
+      y: -20,
+      scale: 0.95,
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        type: "spring",
+        stiffness: 300,
+        damping: 30,
+      },
+    },
+    exit: {
+      opacity: 0,
+      y: -20,
+      scale: 0.95,
+      transition: {
+        duration: 0.2,
       },
     },
   };
@@ -158,7 +198,6 @@ export function SpinWheel() {
                 )}
               </AnimatePresence>
             </div>
-
             <div className="mb-6 w-full max-w-xs space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="bet-amount">Bet Amount</Label>
@@ -188,6 +227,34 @@ export function SpinWheel() {
                     +
                   </Button>
                 </div>
+                <AnimatePresence>
+                  {showError && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="flex items-center gap-2 text-red-500 text-sm">
+                        <svg
+                          className="h-4 w-4"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                        <span>
+                          Insufficient balance (${user.balance} available)
+                        </span>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
 
               <div className="rounded-lg border border-neon-blue/30 bg-neon-blue/5 p-3 text-center">

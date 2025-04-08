@@ -33,6 +33,7 @@ const ReferralStats = ({ referral }) => {
 
 export default function ReferralsPage() {
   const [referral, setReferral] = useState({});
+  const [topReferrers, setTopReferrers] = useState([]);
 
   useEffect(() => {
     const fetchReferralData = async () => {
@@ -44,7 +45,17 @@ export default function ReferralsPage() {
       }
     };
 
+    const fetchTopReferrers = async () => {
+      try {
+        const response = await api.get("/top-referrers");
+        setTopReferrers(response);
+      } catch (error) {
+        console.error("Error fetching top referrers:", error);
+      }
+    };
+
     fetchReferralData();
+    fetchTopReferrers();
   }, []);
 
   return (
@@ -56,7 +67,7 @@ export default function ReferralsPage() {
 
       <ReferralStats referral={referral} />
       <ReferralLink code={referral.referral_code} />
-      <ReferralLeaderboard />
+      <ReferralLeaderboard topReferrers={topReferrers} />
     </div>
   );
 }

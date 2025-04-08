@@ -45,11 +45,11 @@ export function LoginForm() {
       setUser(userData);
       navigate("/");
     } catch (error) {
-      const errorMessage = error.response?.data?.message || "Login failed";
+      const errorMessage =
+        error.response?.data?.message || "Given credentials are invalid";
       setError(errorMessage);
-      throw new Error(errorMessage);
     } finally {
-      setIsLoading(false);
+      setIsSubmitting(false);
     }
   };
 

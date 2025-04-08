@@ -19,12 +19,22 @@ export function RecentTransactions({ transactions }) {
       icon: <ArrowDownRight className="h-4 w-4 text-red-500" />,
       iconBg: "bg-red-500/20",
     },
+    Earning: {
+      icon: <ArrowUpRight className="h-4 w-4 text-green-500" />,
+      iconBg: "bg-green-500/20",
+    },
+    Loss: {
+      icon: <ArrowDownRight className="h-4 w-4 text-red-500" />,
+      iconBg: "bg-red-500/20",
+    },
   };
 
   const colors = {
     Deposit: "text-green-500",
     Investment: "text-foreground",
     Withdrawal: "text-red-500",
+    Earning: "text-green-500",
+    Loss: "text-red-500",
   };
 
   const formatRelativeTime = (timestamp) => {
@@ -38,12 +48,12 @@ export function RecentTransactions({ transactions }) {
     const dateWithoutTime = new Date(
       date.getFullYear(),
       date.getMonth(),
-      date.getDate()
+      date.getDate(),
     );
     const nowWithoutTime = new Date(
       now.getFullYear(),
       now.getMonth(),
-      now.getDate()
+      now.getDate(),
     );
 
     // Calculate difference in days
@@ -157,7 +167,10 @@ export function RecentTransactions({ transactions }) {
                 <div
                   className={`text-sm font-medium ${colors[transaction.type]}`}
                 >
-                  {transaction.type === "Withdrawal" ? "-$" : "+$"}
+                  {transaction.type === "Withdrawal" ||
+                  transaction.type === "Loss"
+                    ? "-$"
+                    : "+$"}
                   {transaction.amount}
                 </div>
               </motion.div>
