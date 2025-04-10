@@ -38,7 +38,7 @@ export function TransactionHistory() {
   }, []);
 
   const isPositive = (type) => {
-    if (type === "Withdrawal") {
+    if (type === "Withdrawal" || type === "Loss") {
       return false;
     }
     return true;

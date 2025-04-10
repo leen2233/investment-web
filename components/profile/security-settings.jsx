@@ -17,7 +17,6 @@ export function SecuritySettings() {
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [twoFactorEnabled, setTwoFactorEnabled] = useState(false);
 
   const [passwordForm, setPasswordForm] = useState({
     currentPassword: "",
@@ -167,7 +166,7 @@ export function SecuritySettings() {
         </CardContent>
       </Card>
 
-      <Card className="glassmorphism overflow-hidden">
+      {/* <Card className="glassmorphism overflow-hidden">
         <CardHeader>
           <CardTitle>Two-Factor Authentication</CardTitle>
           <CardDescription>
@@ -236,7 +235,7 @@ export function SecuritySettings() {
             )}
           </div>
         </CardContent>
-      </Card>
+      </Card> */}
 
       <Card className="glassmorphism overflow-hidden">
         <CardHeader>

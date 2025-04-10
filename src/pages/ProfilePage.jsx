@@ -25,7 +25,7 @@ export default function ProfilePage() {
       <div className="grid gap-8 md:grid-cols-3">
         <UserBalance />
         <ReferralProgram />
-        <Rewards />
+        {/* <Rewards /> */}
       </div>
 
       <TransactionHistory />

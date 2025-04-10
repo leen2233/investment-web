@@ -77,7 +77,7 @@ export function Navbar() {
           <NavLink href="/profile">Profile</NavLink>
         </div>
 
-        <div className="flex items-center gap-2">
+        {/* <div className="flex items-center gap-2">
           <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
             <Button variant="ghost" size="icon" className="relative">
               <Bell className="h-5 w-5" />
@@ -86,7 +86,7 @@ export function Navbar() {
               </span>
               <span className="sr-only">Notifications</span>
             </Button>
-          </motion.div>
+          </motion.div> */}
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

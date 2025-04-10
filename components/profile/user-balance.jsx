@@ -53,7 +53,7 @@ export function UserBalance({ balance }) {
               whileHover="hover"
               whileTap="tap"
             >
-              <Link href="/wallet/deposit" className="w-full block">
+              <Link to="/wallet/deposit" className="w-full block z-10">
                 <Button className="w-full gap-2 bg-gradient-to-r from-neon-purple to-neon-blue hover:shadow-neon transition-all duration-300">
                   <DollarSign className="h-4 w-4" />
                   Deposit
@@ -68,7 +68,7 @@ export function UserBalance({ balance }) {
               whileHover="hover"
               whileTap="tap"
             >
-              <Link href="/wallet/withdraw" className="w-full block">
+              <Link to="/wallet/withdraw" className="w-full block">
                 <Button
                   variant="outline"
                   className="w-full gap-2 border-neon-blue/50 hover:border-neon-blue hover:bg-neon-blue/10 transition-all duration-300"

@@ -1,10 +1,9 @@
-"use client";
-
 import { motion } from "framer-motion";
 import { User, DollarSign } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/contexts/auth-context";
+import { Link } from "react-router-dom";
 
 export function UserProfile() {
   const containerVariants = {
@@ -45,8 +44,8 @@ export function UserProfile() {
     >
       <motion.div className="flex items-center gap-4" variants={itemVariants}>
         <Avatar className="h-16 w-16 border-4 border-background">
-          <AvatarImage src="/placeholder.svg" alt="User" />
-          <AvatarFallback>JD</AvatarFallback>
+          <AvatarImage src={user?.avatar} alt={user?.username} />
+          <AvatarFallback>{user?.username[0] || "JD"}</AvatarFallback>
         </Avatar>
         <div>
           <h2 className="text-2xl font-bold">{user && user.username}</h2>
@@ -76,10 +75,12 @@ export function UserProfile() {
           whileHover="hover"
           whileTap="tap"
         >
-          <Button className="gap-2 bg-gradient-to-r from-neon-purple to-neon-blue hover:shadow-neon transition-all duration-300">
-            <DollarSign className="h-4 w-4" />
-            Deposit Funds
-          </Button>
+          <Link to="/wallet/deposit">
+            <Button className="gap-2 bg-gradient-to-r from-neon-purple to-neon-blue hover:shadow-neon transition-all duration-300">
+              <DollarSign className="h-4 w-4" />
+              Deposit Funds
+            </Button>
+          </Link>
         </motion.div>
       </motion.div>
     </motion.div>

@@ -15,6 +15,7 @@ import DepositPage from "./pages/DepositPage";
 import WithdrawPage from "./pages/WithdrawPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
+import EditProfilePage from "./pages/EditProfilePage";
 
 // Layout component for pages with Navbar and Sidebar
 function MainLayout({ children }) {
@@ -65,6 +66,7 @@ export default function App() {
                     <Route path="/" element={<DashboardPage />} />
                     <Route path="/error" element={<div>Error Page</div>} />
                     <Route path="/profile" element={<ProfilePage />} />
+                    <Route path="/profile/edit" element={<EditProfilePage />} />
                     <Route path="/investments" element={<InvestmentsPage />} />
                     <Route path="/game" element={<GamePage />} />
                     <Route path="/wallet" element={<WalletPage />} />

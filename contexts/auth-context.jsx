@@ -15,6 +15,12 @@ export function AuthProvider({ children }) {
   const { pathname } = useLocation(); // Replaces usePathname
   const [searchParams] = useSearchParams(); // Replaces useSearchParams
 
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem("user", JSON.stringify(user));
+    }
+  }, [user]);
+
   // Check for token and user in localStorage on initial load
   useEffect(() => {
     const checkAuthentication = async () => {

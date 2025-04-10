@@ -12,7 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { NotificationDropdown } from "@/components/notifications/notification-dropdown";
 
 export function Navbar() {
@@ -77,7 +77,7 @@ export function Navbar() {
         </div>
 
         <div className="flex items-center gap-2">
-          <div className="relative">
+          {/* <div className="relative">
             <Button
               variant="ghost"
               size="icon"
@@ -108,12 +108,14 @@ export function Navbar() {
                 </motion.div>
               )}
             </AnimatePresence>
-          </div>
+          </div> */}
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon">
                 <Avatar className="h-8 w-8">
+                  {console.log(user)}
+                  <AvatarImage src={user?.avatar} alt={user?.username} />
                   <AvatarFallback className="bg-neon-blue/20 text-neon-blue">
                     {user?.username.substring(0, 2).toUpperCase()}
                   </AvatarFallback>
