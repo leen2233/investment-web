@@ -3,9 +3,11 @@ import { SpinWheel } from "@/components/game/spin-wheel";
 import { GameLeaderboard } from "@/components/game/game-leaderboard";
 import { api } from "@/lib/axios";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function GamePage() {
   const [leaderboardData, setLeaderboardData] = useState([]);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const fetchLeaderboardData = async () => {
@@ -23,8 +25,8 @@ export default function GamePage() {
   return (
     <div className="space-y-6">
       <DashboardHeader
-        title="P2E Game"
-        description="Spin the wheel to multiply your investment and compete for the top spot on the leaderboard."
+        title={t("nav.game")}
+        description={t("game.description")}
       />
 
       <div className="grid gap-6 lg:grid-cols-2">

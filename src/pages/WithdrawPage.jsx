@@ -7,10 +7,12 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 
 export default function WithdrawPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const { t } = useTranslation();
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
@@ -36,8 +38,8 @@ export default function WithdrawPage() {
           </Button>
         </Link>
         <DashboardHeader
-          title="Withdraw Funds"
-          description="Withdraw funds from your account to your preferred payment method"
+          title={t("withdrawal.header")}
+          description={t("withdrawal.header-description")}
         />
       </div>
 

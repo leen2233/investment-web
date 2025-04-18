@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "../../contexts/auth-context";
 import { api } from "../../lib/axios";
+import { useTranslation } from "react-i18next";
 
 export function SpinWheel() {
   const [isSpinning, setIsSpinning] = useState(false);
@@ -22,6 +23,7 @@ export function SpinWheel() {
   const [potentialWin, setPotentialWin] = useState(20);
   const [showError, setShowError] = useState(false);
   const { user, setUser } = useAuth();
+  const { t } = useTranslation();
 
   useEffect(() => {
     setPotentialWin(betAmount * 2);
@@ -50,7 +52,7 @@ export function SpinWheel() {
     }
 
     setSpinHistory((prev) =>
-      [result.is_positive ? 2 : 0, ...prev].slice(0, 10),
+      [result.is_positive ? 2 : 0, ...prev].slice(0, 10)
     );
     setIsSpinning(false);
   };
@@ -120,7 +122,7 @@ export function SpinWheel() {
     <motion.div variants={containerVariants} initial="hidden" animate="visible">
       <Card className="glassmorphism overflow-hidden h-full">
         <CardHeader className="pb-2">
-          <CardTitle>Spin to Win</CardTitle>
+          <CardTitle>{t("game.spinToWin")}</CardTitle>
         </CardHeader>
         <CardContent className="p-6">
           <div className="flex flex-col items-center">
@@ -175,7 +177,7 @@ export function SpinWheel() {
                           {spinResult}x
                         </div>
                         <div className="mt-2 text-xl font-medium text-white">
-                          You Won!
+                          {t("game.youWon")}
                         </div>
                         <div className="mt-1 text-sm text-white/80">
                           +${betAmount * spinResult}
@@ -187,7 +189,7 @@ export function SpinWheel() {
                           0x
                         </div>
                         <div className="mt-2 text-xl font-medium text-white">
-                          You Lost
+                          {t("game.youLost")}
                         </div>
                         <div className="mt-1 text-sm text-white/80">
                           -${betAmount}
@@ -200,7 +202,7 @@ export function SpinWheel() {
             </div>
             <div className="mb-6 w-full max-w-xs space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="bet-amount">Bet Amount</Label>
+                <Label htmlFor="bet-amount">{t("game.yourBet")}</Label>
                 <div className="flex items-center gap-2">
                   <Button
                     variant="outline"
@@ -249,7 +251,9 @@ export function SpinWheel() {
                           />
                         </svg>
                         <span>
-                          Insufficient balance (${user.balance} available)
+                          {t("game.insufficientBalance", {
+                            balance: user.balance,
+                          })}
                         </span>
                       </div>
                     </motion.div>
@@ -259,7 +263,7 @@ export function SpinWheel() {
 
               <div className="rounded-lg border border-neon-blue/30 bg-neon-blue/5 p-3 text-center">
                 <div className="text-sm text-muted-foreground">
-                  Potential Win
+                  {t("game.potentialWin")}
                 </div>
                 <div className="text-xl font-bold text-glow">
                   ${potentialWin}
@@ -276,10 +280,10 @@ export function SpinWheel() {
               {isSpinning ? (
                 <div className="flex items-center gap-2">
                   <RefreshCw className="h-4 w-4 animate-spin" />
-                  <span>Spinning...</span>
+                  <span>{t("game.spinning")}</span>
                 </div>
               ) : (
-                "Spin Now"
+                t("game.spin")
               )}
             </Button>
           </div>
@@ -287,7 +291,7 @@ export function SpinWheel() {
           {spinHistory.length > 0 && (
             <div className="mt-6">
               <h4 className="mb-2 text-sm font-medium text-center">
-                Recent Results
+                {t("game.recentResults")}
               </h4>
               <div className="flex justify-center gap-2">
                 {spinHistory.map((result, index) => (
@@ -310,7 +314,7 @@ export function SpinWheel() {
           )}
         </CardContent>
         <CardFooter className="bg-muted/30 px-6 py-4 text-center text-sm text-muted-foreground">
-          Double or nothing! Spin the wheel for a 50% chance to double your bet.
+          {t("game.doubleOrNothing")}
         </CardFooter>
       </Card>
     </motion.div>

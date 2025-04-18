@@ -16,6 +16,7 @@ import WithdrawPage from "./pages/WithdrawPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import EditProfilePage from "./pages/EditProfilePage";
+import "@/src/translations/i18n";
 
 // Layout component for pages with Navbar and Sidebar
 function MainLayout({ children }) {

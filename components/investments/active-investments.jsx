@@ -3,9 +3,11 @@ import { useRef } from "react";
 import { Clock, DollarSign, AlertCircle } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
 
 export function ActiveInvestments({ investments }) {
   const containerRef = useRef(null);
+  const { t } = useTranslation();
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start end", "end start"],
@@ -17,77 +19,41 @@ export function ActiveInvestments({ investments }) {
   const formatRelativeTime = (timestamp) => {
     if (!timestamp) return "";
 
-    // Parse the timestamp
     const date = new Date(timestamp);
     const now = new Date();
-
-    // Reset hours to compare just the dates
     const dateWithoutTime = new Date(
       date.getFullYear(),
       date.getMonth(),
-      date.getDate(),
+      date.getDate()
     );
     const nowWithoutTime = new Date(
       now.getFullYear(),
       now.getMonth(),
-      now.getDate(),
+      now.getDate()
     );
-
-    // Calculate difference in days
     const diffTime = nowWithoutTime - dateWithoutTime;
     const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
-    // Format based on the difference
     if (diffDays === 0) {
-      return "Today";
+      return t("common.today");
     } else if (diffDays === 1) {
-      return "Yesterday";
+      return t("common.yesterday");
     } else if (diffDays < 7) {
-      return `${diffDays} days ago`;
+      return t("common.daysAgo", { count: diffDays });
     } else if (diffDays < 14) {
-      return "1 week ago";
+      return t("common.weekAgo");
     } else if (diffDays < 30) {
-      return `${Math.floor(diffDays / 7)} weeks ago`;
+      return t("common.weeksAgo", { count: Math.floor(diffDays / 7) });
     } else if (diffDays < 60) {
-      return "1 month ago";
+      return t("common.monthAgo");
     } else if (diffDays < 365) {
-      return `${Math.floor(diffDays / 30)} months ago`;
+      return t("common.monthsAgo", { count: Math.floor(diffDays / 30) });
     } else if (diffDays < 730) {
-      return "1 year ago";
+      return t("common.yearAgo");
     } else {
-      return `${Math.floor(diffDays / 365)} years ago`;
+      return t("common.yearsAgo", { count: Math.floor(diffDays / 365) });
     }
   };
-
-  // const investments = [
-  //   {
-  //     name: "Daily 5% ROI",
-  //     amount: "$1,000",
-  //     date: "Started 10 days ago",
-  //     timeRemaining: "11 days",
-  //     currentValue: "$1,500",
-  //     progress: 48,
-  //     color: "purple",
-  //   },
-  //   {
-  //     name: "Daily 3% ROI",
-  //     amount: "$500",
-  //     date: "Started 15 days ago",
-  //     timeRemaining: "15 days",
-  //     currentValue: "$725",
-  //     progress: 50,
-  //     color: "blue",
-  //   },
-  //   {
-  //     name: "Daily 7% ROI",
-  //     amount: "$2,000",
-  //     date: "Started 5 days ago",
-  //     timeRemaining: "9 days",
-  //     currentValue: "$2,700",
-  //     progress: 35,
-  //     color: "cyan",
-  //   },
-  // ];
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -130,7 +96,7 @@ export function ActiveInvestments({ investments }) {
         initial="hidden"
         animate="visible"
       >
-        Your Active Investments
+        {t("investments.activePlans")}
       </motion.h3>
       {investments.length === 0 ? (
         <motion.div
@@ -143,10 +109,10 @@ export function ActiveInvestments({ investments }) {
               <div className="flex flex-col items-center justify-center gap-2 text-center">
                 <AlertCircle className="h-12 w-12 text-muted-foreground" />
                 <p className="text-lg font-medium">
-                  You don't have any active investments yet
+                  {t("investments.noActiveInvestments")}
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  Start investing to see your investments here
+                  {t("investments.startInvesting")}
                 </p>
               </div>
             </CardContent>
@@ -177,7 +143,8 @@ export function ActiveInvestments({ investments }) {
                         {investment.plan_name}
                       </h4>
                       <p className="text-sm text-muted-foreground">
-                        ${investment.initial_amount} Started{" "}
+                        ${investment.initial_amount}{" "}
+                        {t("investments.startedOn")}{" "}
                         {formatRelativeTime(investment.start_date)}
                       </p>
                     </div>
@@ -185,20 +152,22 @@ export function ActiveInvestments({ investments }) {
                       <div className="flex items-center gap-2">
                         <Clock className="h-4 w-4 text-muted-foreground" />
                         <span className="text-sm">
-                          {investment.days_remaining} days remaining
+                          {investment.days_remaining}{" "}
+                          {t("investments.daysRemaining")}
                         </span>
                       </div>
                       <div className="flex items-center gap-2">
                         <DollarSign className="h-4 w-4 text-muted-foreground" />
                         <span className="text-sm font-medium">
-                          {investment.current_value} current value
+                          ${investment.current_value}{" "}
+                          {t("investments.currentValue")}
                         </span>
                       </div>
                     </div>
                   </div>
                   <div className="mt-4">
                     <div className="mb-1 flex items-center justify-between text-sm">
-                      <span>Progress</span>
+                      <span>{t("investments.progress")}</span>
                       <span>
                         {(100 / investment.duration) * investment.days_passed}%
                       </span>
@@ -222,7 +191,7 @@ export function ActiveInvestments({ investments }) {
                       size="sm"
                       className={`border-neon-${investment.color}/50 hover:border-neon-${investment.color} hover:bg-neon-${investment.color}/10 transition-all duration-300`}
                     >
-                      View Details
+                      {t("investments.viewDetails")}
                     </Button>
                   </div>
                 </CardContent>

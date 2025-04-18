@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Lock, Eye, EyeOff, Shield, Smartphone } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import {
   Card,
   CardContent,
@@ -14,6 +15,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 
 export function SecuritySettings() {
+  const { t } = useTranslation();
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -61,22 +63,24 @@ export function SecuritySettings() {
     <div className="grid gap-6">
       <Card className="glassmorphism overflow-hidden">
         <CardHeader>
-          <CardTitle>Change Password</CardTitle>
+          <CardTitle>{t("settings.security.passwordTitle")}</CardTitle>
           <CardDescription>
-            Update your password to keep your account secure
+            {t("settings.security.passwordDescription")}
           </CardDescription>
         </CardHeader>
         <CardContent className="p-6">
           <form onSubmit={handlePasswordSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="currentPassword">Current Password</Label>
+              <Label htmlFor="currentPassword">
+                {t("settings.security.currentPassword")}
+              </Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
                   id="currentPassword"
                   name="currentPassword"
                   type={showCurrentPassword ? "text" : "password"}
-                  placeholder="Enter your current password"
+                  placeholder={t("settings.security.currentPassword")}
                   className="pl-10 pr-10"
                   value={passwordForm.currentPassword}
                   onChange={handlePasswordChange}
@@ -97,14 +101,16 @@ export function SecuritySettings() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="newPassword">New Password</Label>
+              <Label htmlFor="newPassword">
+                {t("settings.security.newPassword")}
+              </Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
                   id="newPassword"
                   name="newPassword"
                   type={showNewPassword ? "text" : "password"}
-                  placeholder="Enter your new password"
+                  placeholder={t("settings.security.newPassword")}
                   className="pl-10 pr-10"
                   value={passwordForm.newPassword}
                   onChange={handlePasswordChange}
@@ -125,14 +131,16 @@ export function SecuritySettings() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm New Password</Label>
+              <Label htmlFor="confirmPassword">
+                {t("settings.security.confirmPassword")}
+              </Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
                   id="confirmPassword"
                   name="confirmPassword"
                   type={showConfirmPassword ? "text" : "password"}
-                  placeholder="Confirm your new password"
+                  placeholder={t("settings.security.confirmPassword")}
                   className="pl-10 pr-10"
                   value={passwordForm.confirmPassword}
                   onChange={handlePasswordChange}
@@ -151,8 +159,7 @@ export function SecuritySettings() {
                 </button>
               </div>
               <p className="text-xs text-muted-foreground">
-                Password must be at least 8 characters long and include a mix of
-                letters, numbers, and symbols.
+                {t("settings.security.passwordRequirements")}
               </p>
             </div>
 
@@ -160,103 +167,42 @@ export function SecuritySettings() {
               type="submit"
               className="bg-gradient-to-r from-neon-blue to-neon-purple hover:shadow-neon transition-all duration-300"
             >
-              Update Password
+              {t("settings.security.updatePassword")}
             </Button>
           </form>
         </CardContent>
       </Card>
 
-      {/* <Card className="glassmorphism overflow-hidden">
-        <CardHeader>
-          <CardTitle>Two-Factor Authentication</CardTitle>
-          <CardDescription>
-            Add an extra layer of security to your account
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="p-6">
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <div className="flex items-center gap-2">
-                  <Shield className="h-5 w-5 text-neon-purple" />
-                  <Label htmlFor="two-factor">Two-Factor Authentication</Label>
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  Require a verification code when logging in
-                </p>
-              </div>
-              <Switch
-                id="two-factor"
-                checked={twoFactorEnabled}
-                onCheckedChange={(checked) => {
-                  setTwoFactorEnabled(checked);
-                  console.log(
-                    "Two-factor authentication:",
-                    checked ? "enabled" : "disabled"
-                  );
-                }}
-              />
-            </div>
-
-            {twoFactorEnabled && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.3 }}
-                className="rounded-lg border p-4"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="rounded-full bg-neon-purple/10 p-3">
-                    <Smartphone className="h-6 w-6 text-neon-purple" />
-                  </div>
-                  <div>
-                    <h4 className="font-medium">Authenticator App</h4>
-                    <p className="text-sm text-muted-foreground">
-                      Use an authenticator app like Google Authenticator or
-                      Authy
-                    </p>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="mt-2"
-                      onClick={() => {
-                        // In a real app, this would open a 2FA setup flow
-                        alert(
-                          "This would start the 2FA setup process in a real application."
-                        );
-                      }}
-                    >
-                      Set Up
-                    </Button>
-                  </div>
-                </div>
-              </motion.div>
-            )}
-          </div>
-        </CardContent>
-      </Card> */}
-
       <Card className="glassmorphism overflow-hidden">
         <CardHeader>
-          <CardTitle>Login Sessions</CardTitle>
-          <CardDescription>Manage your active sessions</CardDescription>
+          <CardTitle>{t("settings.security.sessions")}</CardTitle>
+          <CardDescription>
+            {t("settings.security.sessionsDescription")}
+          </CardDescription>
         </CardHeader>
         <CardContent className="p-6">
           <div className="space-y-4">
             <div className="rounded-lg border p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <h4 className="font-medium">Current Session</h4>
+                  <h4 className="font-medium">
+                    {t("settings.security.currentSession")}
+                  </h4>
                   <p className="text-sm text-muted-foreground">
-                    Chrome on Windows • IP: 192.168.1.1
+                    {t("settings.security.browserInfo", {
+                      browser: "Chrome",
+                      os: "Windows",
+                    })}{" "}
+                    • {t("settings.security.ipAddress", { ip: "192.168.1.1" })}
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    Started: Today at 10:30 AM
+                    {t("settings.security.startedAt", {
+                      time: "Today at 10:30 AM",
+                    })}
                   </p>
                 </div>
                 <div className="rounded-full bg-green-500/10 px-2 py-1 text-xs font-medium text-green-500">
-                  Active
+                  {t("settings.security.activeNow")}
                 </div>
               </div>
             </div>
@@ -269,7 +215,7 @@ export function SecuritySettings() {
                 alert("All other sessions have been logged out.");
               }}
             >
-              Log Out of All Other Sessions
+              {t("settings.security.logoutOthers")}
             </Button>
           </div>
         </CardContent>

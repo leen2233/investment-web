@@ -14,10 +14,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { RippleButton } from "@/components/ui/ripple-button";
+import { useTranslation } from "react-i18next";
 
 export function InvestmentPlansFull({ plans }) {
   const [hoveredPlan, setHoveredPlan] = useState(null);
- 
+  const { t } = useTranslation();
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -71,7 +73,7 @@ export function InvestmentPlansFull({ plans }) {
         className="flex items-center justify-between"
         variants={headerVariants}
       >
-        <h2 className="text-xl font-bold">Available Plans</h2>
+        <h2 className="text-xl font-bold">{t("investments.availablePlans")}</h2>
       </motion.div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -95,7 +97,7 @@ export function InvestmentPlansFull({ plans }) {
               {plan.popular && (
                 <div className="absolute right-4 top-4 z-10">
                   <Badge className="bg-neon-purple hover:bg-neon-purple/90">
-                    Popular
+                    {t("investments.popular")}
                   </Badge>
                 </div>
               )}
@@ -122,7 +124,7 @@ export function InvestmentPlansFull({ plans }) {
                   <div className="flex items-center gap-2">
                     <TrendingUp className={`h-5 w-5 text-neon-${plan.color}`} />
                     <span className="text-xl font-bold">
-                      {plan.percentage}% Daily
+                      {plan.percentage}% {t("common.daily")}
                     </span>
                   </div>
                   <Badge
@@ -137,38 +139,42 @@ export function InvestmentPlansFull({ plans }) {
                   <div className="space-y-2">
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-muted-foreground">
-                        Minimum Investment
+                        {t("investments.minDeposit")}
                       </span>
                       <span className="font-medium">
                         ${plan.minimum_amount}
                       </span>
                     </div>
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">Duration</span>
-                      <span className="font-medium">{plan.duration} days</span>
-                    </div>
-                    <div className="flex items-center justify-between text-sm">
                       <span className="text-muted-foreground">
-                        Early Withdrawal
+                        {t("investments.duration")}
                       </span>
                       <span className="font-medium">
-                        {plan.early_withdrawal_time} days (
-                        {plan.early_withdrawal_fee}% fee)
+                        {plan.duration} {t("common.days")}
                       </span>
                     </div>
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-muted-foreground">
-                        Total Return
+                        {t("investments.earlyWithdrawal")}
                       </span>
                       <span className="font-medium">
-                        {plan.percentage}% ROI
+                        {plan.early_withdrawal_time} {t("common.days")} (
+                        {plan.early_withdrawal_fee}% {t("common.fee")})
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-muted-foreground">
+                        {t("investments.totalReturn")}
+                      </span>
+                      <span className="font-medium">
+                        {plan.percentage}% {t("investments.roi")}
                       </span>
                     </div>
                   </div>
 
                   <div className="pt-2">
                     <div className="mb-2 flex items-center justify-between text-sm">
-                      <span>Popularity</span>
+                      <span>{t("investments.popularity")}</span>
                       <span className="font-medium">{plan.popularity}%</span>
                     </div>
                     <div className="h-2 w-full rounded-full bg-secondary">
@@ -193,7 +199,7 @@ export function InvestmentPlansFull({ plans }) {
                     plan.color === "purple" ? "" : plan.color
                   } transition-all duration-300`}
                 >
-                  Join Plan
+                  {t("investments.invest")}
                 </RippleButton>
               </CardFooter>
             </Card>

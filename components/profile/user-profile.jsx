@@ -2,10 +2,14 @@ import { motion } from "framer-motion";
 import { User, DollarSign } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useAuth } from "@/contexts/auth-context";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { format } from "date-fns";
 
-export function UserProfile() {
+export function UserProfile({ user }) {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+
   const containerVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: {
@@ -33,7 +37,6 @@ export function UserProfile() {
     hover: { scale: 1.05 },
     tap: { scale: 0.95 },
   };
-  const { user } = useAuth();
 
   return (
     <motion.div
@@ -45,11 +48,18 @@ export function UserProfile() {
       <motion.div className="flex items-center gap-4" variants={itemVariants}>
         <Avatar className="h-16 w-16 border-4 border-background">
           <AvatarImage src={user?.avatar} alt={user?.username} />
-          <AvatarFallback>{user?.username[0] || "JD"}</AvatarFallback>
+          <AvatarFallback>{user?.username?.[0] || "U"}</AvatarFallback>
         </Avatar>
         <div>
-          <h2 className="text-2xl font-bold">{user && user.username}</h2>
-          <p className="text-muted-foreground">Member since March 2025</p>
+          <h2 className="text-2xl font-bold">{user?.username}</h2>
+          <p className="text-muted-foreground">
+            {t("profile.memberSince", {
+              date: format(
+                new Date(user?.created_at || new Date()),
+                "MMMM yyyy"
+              ),
+            })}
+          </p>
         </div>
       </motion.div>
 
@@ -63,9 +73,12 @@ export function UserProfile() {
           <Button
             variant="outline"
             className="gap-2 border-neon-blue/50 hover:border-neon-blue hover:bg-neon-blue/10 transition-all duration-300"
+            onClick={() => {
+              navigate("/profile/edit");
+            }}
           >
             <User className="h-4 w-4" />
-            Edit Profile
+            {t("profile.editProfile")}
           </Button>
         </motion.div>
 
@@ -78,7 +91,7 @@ export function UserProfile() {
           <Link to="/wallet/deposit">
             <Button className="gap-2 bg-gradient-to-r from-neon-purple to-neon-blue hover:shadow-neon transition-all duration-300">
               <DollarSign className="h-4 w-4" />
-              Deposit Funds
+              {t("wallet.depositFunds")}
             </Button>
           </Link>
         </motion.div>

@@ -1,12 +1,13 @@
 import { DashboardHeader } from "@/components/dashboard/dashboard-header";
-import { ProfileSettings } from "@/components/profile/profile-settings";
 import { SecuritySettings } from "@/components/profile/security-settings";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 export default function SettingsPage() {
+  const { t } = useTranslation();
+
   return (
     <div className="container py-8 space-y-8">
       <div className="flex items-center gap-4 mb-6">
@@ -16,25 +17,12 @@ export default function SettingsPage() {
           </Button>
         </Link>
         <DashboardHeader
-          title="Profile Settings"
-          description="Manage your account settings and preferences"
+          title={t("settings.security.title")}
+          description={t("settings.security.description")}
         />
       </div>
 
-      <Tabs defaultValue="general" className="w-full">
-        <TabsList className="grid w-full grid-cols-2 lg:w-[400px]">
-          <TabsTrigger value="general">General Settings</TabsTrigger>
-          <TabsTrigger value="security">Security</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="general" className="mt-6">
-          <ProfileSettings />
-        </TabsContent>
-
-        <TabsContent value="security" className="mt-6">
-          <SecuritySettings />
-        </TabsContent>
-      </Tabs>
+      <SecuritySettings />
     </div>
   );
 }

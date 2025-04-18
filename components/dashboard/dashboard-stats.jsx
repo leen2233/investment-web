@@ -4,11 +4,14 @@ import { motion } from "framer-motion";
 import { ArrowUpRight, ArrowDownRight, LineChart, Wallet } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { CountUp } from "@/components/ui/count-up";
+import { useTranslation } from "react-i18next";
 
 export function DashboardStats({ stats }) {
+  const { t } = useTranslation();
+
   const items = [
     {
-      title: "Total Balance",
+      title: t("dashboard.totalBalance"),
       value: stats.balance && stats.balance.total,
       change: `+${stats.balance ? stats.balance.more : 0}%`,
       trend: "up",
@@ -16,17 +19,17 @@ export function DashboardStats({ stats }) {
       color: "blue",
     },
     {
-      title: "Active Investments",
+      title: t("dashboard.activeInvestments"),
       value: stats.investments && stats.investments.total,
-      subtitle: `$${
-        stats.investments ? stats.investments.total_value : 0
-      } total value`,
+      subtitle: `$${stats.investments ? stats.investments.total_value : 0} ${t(
+        "common.totalValue"
+      )}`,
       icon: <LineChart className="h-4 w-4 text-muted-foreground" />,
       color: "cyan",
       isCount: true,
     },
     {
-      title: "Total Deposits",
+      title: t("wallet.deposits"),
       value: stats.deposits && stats.deposits.total,
       change: `+${stats.deposits ? stats.deposits.more : 0}%`,
       trend: "up",
@@ -34,7 +37,7 @@ export function DashboardStats({ stats }) {
       color: "purple",
     },
     {
-      title: "Total Withdrawals",
+      title: t("wallet.withdrawals"),
       value: stats.withdraws && stats.withdraws.total,
       change: `+${stats.withdraws ? stats.withdraws.more : 0}%`,
       trend: "down",
@@ -97,7 +100,7 @@ export function DashboardStats({ stats }) {
                   >
                     {stat.change}
                   </span>{" "}
-                  from last month
+                  {t("common.fromLastMonth")}
                 </p>
               ) : (
                 <p className="mt-1 text-xs text-muted-foreground">

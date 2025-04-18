@@ -13,12 +13,14 @@ import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useAuth } from "@/contexts/auth-context";
 import { api } from "@/lib/axios";
+import { useTranslation } from "react-i18next";
 
 export function EditProfile({
   onSave,
   initialUsername = "User123",
   initialAvatar = null,
 }) {
+  const { t } = useTranslation();
   const { user, setUser } = useAuth();
   const [username, setUsername] = useState(initialUsername);
   const [avatar, setAvatar] = useState(initialAvatar);
@@ -114,8 +116,12 @@ export function EditProfile({
       // Success - update UI
       setSuccess(true);
 
-      setUser((prev) => ({ ...prev, username: data.username, avatar: data.avatar }));
-      
+      setUser((prev) => ({
+        ...prev,
+        username: data.username,
+        avatar: data.avatar,
+      }));
+
       // Reset success message after 3 seconds
       setTimeout(() => {
         setSuccess(false);
@@ -163,16 +169,14 @@ export function EditProfile({
   return (
     <Card className="glassmorphism overflow-hidden">
       <CardHeader>
-        <CardTitle>Edit Profile</CardTitle>
-        <CardDescription>
-          Update your username and profile picture
-        </CardDescription>
+        <CardTitle>{t("profile.editProfile")}</CardTitle>
+        <CardDescription>{t("profile.description")}</CardDescription>
       </CardHeader>
       <CardContent className="p-6">
         {success && (
           <Alert className="mb-6 bg-green-500/10 text-green-500 border-green-500/20">
             <CheckCircle className="h-4 w-4" />
-            <AlertDescription>Profile updated successfully!</AlertDescription>
+            <AlertDescription>{t("common.success")}</AlertDescription>
           </Alert>
         )}
 
@@ -186,7 +190,7 @@ export function EditProfile({
         <div className="space-y-6">
           {/* Avatar Upload */}
           <div className="space-y-2">
-            <Label>Profile Picture</Label>
+            <Label>{t("profile.profilePicture", "Profile Picture")}</Label>
             <div
               className={`relative flex flex-col items-center justify-center rounded-lg border-2 border-dashed p-6 transition-all ${
                 isDragging
@@ -202,7 +206,7 @@ export function EditProfile({
                 <div className="relative">
                   <img
                     src={previewAvatar}
-                    alt="Profile Preview"
+                    alt={t("profile.profilePreview", "Profile Preview")}
                     className="h-24 w-24 rounded-full object-cover border border-border"
                   />
                   <button
@@ -234,13 +238,13 @@ export function EditProfile({
                   className="flex items-center gap-2"
                 >
                   <Upload className="h-4 w-4" />
-                  <span>Upload Image</span>
+                  <span>{t("common.upload")}</span>
                 </Button>
                 <p className="mt-2 text-xs text-muted-foreground">
-                  PNG, JPG or GIF (max. 2MB)
+                  PNG, JPG {t("common.or", "or")} GIF ({t("common.maxSize")})
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  You can also drag and drop an image here
+                  {t("profile.dragAndDrop")}
                 </p>
               </div>
             </div>
@@ -248,7 +252,7 @@ export function EditProfile({
 
           {/* Username Input */}
           <div className="space-y-2">
-            <Label htmlFor="username">Username</Label>
+            <Label htmlFor="username">{t("profile.username")}</Label>
             <div className="relative">
               <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <Input
@@ -256,11 +260,11 @@ export function EditProfile({
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 className="pl-10"
-                placeholder="Enter your username"
+                placeholder={t("profile.usernamePlaceholder")}
               />
             </div>
             <p className="text-xs text-muted-foreground">
-              Your username will be visible to other users
+              {t("profile.usernameDescription")}
             </p>
           </div>
 
@@ -274,10 +278,10 @@ export function EditProfile({
               {saving ? (
                 <div className="flex items-center gap-2">
                   <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"></div>
-                  <span>Saving...</span>
+                  <span>{t("common.saving")}</span>
                 </div>
               ) : (
-                "Save Changes"
+                t("common.saveChanges")
               )}
             </Button>
           </div>

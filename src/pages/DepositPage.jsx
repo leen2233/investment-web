@@ -7,10 +7,12 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 
 export default function DepositPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const { t } = useTranslation();
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
@@ -36,8 +38,8 @@ export default function DepositPage() {
           </Button>
         </Link>
         <DashboardHeader
-          title="Deposit Funds"
-          description="Add funds to your account using your preferred payment method"
+          title={t("deposit.header")}
+          description={t("deposit.header-description")}
         />
       </div>
 

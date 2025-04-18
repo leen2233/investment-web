@@ -17,10 +17,12 @@ import { Label } from "@/components/ui/label";
 import { CountUp } from "@/components/ui/count-up";
 import { useAuth } from "@/contexts/auth-context";
 import { api } from "@/lib/axios";
+import { useTranslation } from "react-i18next";
 
 export function ReferralProgram() {
   const [copied, setCopied] = useState(false);
   const [referral, setReferral] = useState({ referral_count: 0, earnings: 0 });
+  const { t } = useTranslation();
 
   React.useEffect(() => {
     const fetchReferrals = async () => {
@@ -74,26 +76,25 @@ export function ReferralProgram() {
       <Card className="glassmorphism overflow-hidden h-full">
         <div className="absolute inset-0 bg-glow-blue opacity-10" />
         <CardHeader className="pb-3">
-          <CardTitle>Referral Program</CardTitle>
-          <CardDescription>
-            Invite friends and earn 5% of their deposits
-          </CardDescription>
+          <CardTitle>{t("referrals.program")}</CardTitle>
+          <CardDescription>{t("referrals.earnCommission")}</CardDescription>
         </CardHeader>
         <CardContent className="pb-2">
           <div className="mb-2 flex items-center justify-between">
-            <span className="text-sm">Total Referrals</span>
+            <span className="text-sm">{t("referrals.totalReferrals")}</span>
             <span className="font-medium">
-              <CountUp end={referral.referral_count} duration={1.5} /> users
+              <CountUp end={referral.referral_count} duration={1.5} />{" "}
+              {t("referrals.users")}
             </span>
           </div>
           <div className="mb-4 flex items-center justify-between">
-            <span className="text-sm">Earnings</span>
+            <span className="text-sm">{t("referrals.earnings")}</span>
             <span className="font-medium text-neon-blue">
               $<CountUp end={referral.earnings} duration={2} />
             </span>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="referral-link">Your Referral Code</Label>
+            <Label htmlFor="referral-link">{t("referrals.yourCode")}</Label>
             <div className="flex items-center gap-2">
               <Input
                 id="referral-link"
@@ -113,7 +114,7 @@ export function ReferralProgram() {
                   onClick={handleCopy}
                 >
                   <Copy className="h-4 w-4" />
-                  <span className="sr-only">Copy</span>
+                  <span className="sr-only">{t("common.copy")}</span>
                 </Button>
               </motion.div>
             </div>
@@ -124,7 +125,7 @@ export function ReferralProgram() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
               >
-                Copied to clipboard!
+                {t("common.copied")}
               </motion.p>
             )}
           </div>
@@ -142,7 +143,7 @@ export function ReferralProgram() {
               className="w-full gap-2 border-neon-blue/50 hover:border-neon-blue hover:bg-neon-blue/10 transition-all duration-300"
             >
               <Share2 className="h-4 w-4" />
-              Share Referral Link
+              {t("referrals.shareLink")}
             </Button>
           </motion.div>
         </CardFooter>

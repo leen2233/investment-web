@@ -5,11 +5,13 @@ import { InvestmentPlans } from "../../components/dashboard/investment-plans";
 import { RecentTransactions } from "../../components/dashboard/recent-transactions";
 import { api } from "../../lib/axios";
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function DashboardPage() {
   const [plans, setPlans] = useState([]);
   const [lastTransactions, setLastTransactions] = useState([]);
   const [stats, setStats] = useState({});
+  const { t } = useTranslation();
 
   useEffect(() => {
     const fetchPlans = async () => {
@@ -35,8 +37,8 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       <DashboardHeader
-        title="Dashboard"
-        description="Welcome back! Here's an overview of your investments and earnings."
+        title={t("nav.dashboard")}
+        description={t("dashboard.welcome")}
       />
 
       <DashboardStats stats={stats} />

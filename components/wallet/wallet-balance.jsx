@@ -5,25 +5,27 @@ import { CountUp } from "@/components/ui/count-up";
 import { useAuth } from "@/contexts/auth-context";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 export function WalletBalance({ stats }) {
   const { user } = useAuth();
+  const { t } = useTranslation();
 
   const balances = [
     {
-      title: "Total Balance",
+      title: t("dashboard.totalBalance"),
       value: stats?.balance?.total || 0,
       icon: <Wallet className="h-5 w-5 text-neon-blue" />,
       color: "blue",
     },
     {
-      title: "Total Deposits",
+      title: t("wallet.deposits"),
       value: stats?.deposits?.total || 0,
       icon: <ArrowUpRight className="h-5 w-5 text-neon-cyan" />,
       color: "cyan",
     },
     {
-      title: "Total Withdrawals",
+      title: t("wallet.withdrawals"),
       value: stats?.withdrawals?.total || 0,
       icon: <ArrowDownRight className="h-5 w-5 text-neon-purple" />,
       color: "purple",
@@ -75,7 +77,7 @@ export function WalletBalance({ stats }) {
                 $<CountUp end={balance.value} duration={2} />
               </div>
               <div className="mt-2 text-xs text-muted-foreground">
-                Available for withdrawal:{" "}
+                {t("wallet.availableForWithdrawal")}:{" "}
                 <span className="font-medium text-foreground">
                   ${Math.floor(balance.value * 0.95)}
                 </span>

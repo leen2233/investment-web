@@ -4,9 +4,11 @@ import { Trophy } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { useTranslation } from "react-i18next";
 
 export function GameLeaderboard({ data }) {
   const [activeTab, setActiveTab] = useState("daily");
+  const { t } = useTranslation();
 
   const containerVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -44,7 +46,7 @@ export function GameLeaderboard({ data }) {
     <motion.div variants={containerVariants} initial="hidden" animate="visible">
       <Card className="glassmorphism overflow-hidden h-full">
         <CardHeader className="pb-2">
-          <CardTitle>Leaderboard</CardTitle>
+          <CardTitle>{t("game.leaderboard")}</CardTitle>
         </CardHeader>
         <CardContent className="p-6">
           <Tabs
@@ -53,7 +55,7 @@ export function GameLeaderboard({ data }) {
             onValueChange={setActiveTab}
           >
             <TabsList className="grid w-full grid-cols-1">
-              <TabsTrigger value="daily">Daily</TabsTrigger>
+              <TabsTrigger value="daily">{t("game.daily")}</TabsTrigger>
             </TabsList>
             <AnimatePresence mode="wait">
               <motion.div
@@ -82,10 +84,10 @@ export function GameLeaderboard({ data }) {
                               index + 1 === 1
                                 ? "bg-yellow-500/80"
                                 : index + 1 === 2
-                                  ? "bg-gray-300/80"
-                                  : index + 1 === 3
-                                    ? "bg-amber-600/80"
-                                    : "bg-muted"
+                                ? "bg-gray-300/80"
+                                : index + 1 === 3
+                                ? "bg-amber-600/80"
+                                : "bg-muted"
                             } text-background font-bold`}
                           >
                             {index + 1}
@@ -100,7 +102,8 @@ export function GameLeaderboard({ data }) {
                               @{player.username}
                             </div>
                             <div className="text-sm text-muted-foreground">
-                              ${player.earnings.toLocaleString()}
+                              ${player.earnings.toLocaleString()}{" "}
+                              {t("game.earned")}
                             </div>
                           </div>
                         </div>
@@ -116,10 +119,13 @@ export function GameLeaderboard({ data }) {
                                 index + 1 === 1
                                   ? "text-yellow-500"
                                   : index + 1 === 2
-                                    ? "text-gray-400"
-                                    : "text-amber-600"
+                                  ? "text-gray-400"
+                                  : "text-amber-600"
                               }`}
                             />
+                            <span className="sr-only">
+                              {t("game.place", { place: index + 1 })}
+                            </span>
                           </motion.div>
                         )}
                       </motion.div>

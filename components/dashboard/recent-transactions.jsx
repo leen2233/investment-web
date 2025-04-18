@@ -4,8 +4,11 @@ import { motion } from "framer-motion";
 import { ArrowUpRight, ArrowDownRight, Clock } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
 
 export function RecentTransactions({ transactions }) {
+  const { t } = useTranslation();
+
   const icons = {
     Deposit: {
       icon: <ArrowUpRight className="h-4 w-4 text-green-500" />,
@@ -40,62 +43,41 @@ export function RecentTransactions({ transactions }) {
   const formatRelativeTime = (timestamp) => {
     if (!timestamp) return "";
 
-    // Parse the timestamp
     const date = new Date(timestamp);
     const now = new Date();
-
-    // Reset hours to compare just the dates
     const dateWithoutTime = new Date(
       date.getFullYear(),
       date.getMonth(),
-      date.getDate(),
+      date.getDate()
     );
     const nowWithoutTime = new Date(
       now.getFullYear(),
       now.getMonth(),
-      now.getDate(),
+      now.getDate()
     );
-
-    // Calculate difference in days
     const diffTime = nowWithoutTime - dateWithoutTime;
     const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
-    // Format based on the difference
     if (diffDays === 0) {
-      return "Today";
+      return t("common.today");
     } else if (diffDays === 1) {
-      return "Yesterday";
+      return t("common.yesterday");
     } else if (diffDays < 7) {
-      return `${diffDays} days ago`;
+      return t("common.daysAgo", { count: diffDays });
     } else if (diffDays < 14) {
-      return "1 week ago";
+      return t("common.weekAgo");
     } else if (diffDays < 30) {
-      return `${Math.floor(diffDays / 7)} weeks ago`;
+      return t("common.weeksAgo", { count: Math.floor(diffDays / 7) });
     } else if (diffDays < 60) {
-      return "1 month ago";
+      return t("common.monthAgo");
     } else if (diffDays < 365) {
-      return `${Math.floor(diffDays / 30)} months ago`;
+      return t("common.monthsAgo", { count: Math.floor(diffDays / 30) });
     } else if (diffDays < 730) {
-      return "1 year ago";
+      return t("common.yearAgo");
     } else {
-      return `${Math.floor(diffDays / 365)} years ago`;
+      return t("common.yearsAgo", { count: Math.floor(diffDays / 365) });
     }
   };
-
-  // const transactions = [
-  //   {,
-  //     date: "Today",
-  //   },
-  //   {
-  //     date: "Yesterday",
-  //   },
-  //   {
-  //     date: "3 days ago",
-  //   },
-  //   {
-  //     date: "1 week ago",
-  //   },
-  // ]
 
   const containerVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -134,7 +116,7 @@ export function RecentTransactions({ transactions }) {
     <motion.div variants={containerVariants} initial="hidden" animate="visible">
       <Card className="glassmorphism overflow-hidden h-full">
         <CardHeader className="pb-2">
-          <CardTitle>Recent Transactions</CardTitle>
+          <CardTitle>{t("dashboard.recentTransactions")}</CardTitle>
         </CardHeader>
         <CardContent className="p-6">
           <motion.div
@@ -158,7 +140,9 @@ export function RecentTransactions({ transactions }) {
                     {icons[transaction.type].icon}
                   </div>
                   <div>
-                    <p className="text-sm font-medium">{transaction.type}</p>
+                    <p className="text-sm font-medium">
+                      {t(`transactions.${transaction.type.toLowerCase()}`)}
+                    </p>
                     <p className="text-xs text-muted-foreground">
                       {formatRelativeTime(transaction.date)}
                     </p>
@@ -182,7 +166,7 @@ export function RecentTransactions({ transactions }) {
               variant="link"
               className="text-sm text-muted-foreground hover:text-neon-blue"
             >
-              View All Transactions
+              {t("transactions.viewAll")}
             </Button>
           </div>
         </CardContent>

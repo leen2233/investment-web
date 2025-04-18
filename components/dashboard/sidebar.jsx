@@ -3,9 +3,11 @@ import { motion } from "framer-motion";
 import { TrendingUp, Award } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { CountUp } from "@/components/ui/count-up";
+import { useTranslation } from "react-i18next";
 
 export function Sidebar() {
   const { user } = useAuth();
+  const { t } = useTranslation();
 
   return (
     <div className="hidden w-64 border-r border-border/40 p-4 md:block">
@@ -13,17 +15,21 @@ export function Sidebar() {
         <UserBalance balance={user?.balance || 0} />
         {user && user.investments && (
           <StatsCard
-            title="Active Investments"
+            title={t("dashboard.activeInvestments")}
             value={user.investments.active_investments}
-            subtitle={"$" + user.investments.total_value + " total value"}
+            subtitle={t("dashboard.totalValue", {
+              value: user.investments.total_value,
+            })}
             icon={<TrendingUp className="h-4 w-4 text-neon-cyan" />}
           />
         )}
         {user && user.referral_earnings && (
           <StatsCard
-            title="Referral Earnings"
+            title={t("dashboard.referralEarnings")}
             value={user.referral_earnings.earnings}
-            subtitle={user.referral_earnings.referrals + " active referrals"}
+            subtitle={t("dashboard.activeReferrals", {
+              count: user.referral_earnings.referrals,
+            })}
             icon={<Award className="h-4 w-4 text-neon-purple" />}
             prefix="$"
           />
@@ -37,19 +43,21 @@ export function Sidebar() {
 }
 
 function UserBalance({ balance }) {
+  const { t } = useTranslation();
+
   return (
     <Card className="glassmorphism overflow-hidden">
       <div className="absolute inset-0 bg-glow-blue opacity-10" />
       <div className="p-4">
         <div className="mb-1 text-sm font-medium text-muted-foreground">
-          Your Balance
+          {t("dashboard.yourBalance")}
         </div>
         <div className="text-2xl font-bold text-glow">
           $<CountUp end={balance} duration={2} />
         </div>
         <div className="mt-2 flex items-center justify-between">
           <span className="text-xs text-muted-foreground">
-            Available for withdrawal
+            {t("dashboard.availableForWithdrawal")}
           </span>
           <span className="text-xs font-medium text-neon-blue">
             ${(balance / 100) * 90}
@@ -81,14 +89,18 @@ function StatsCard({ title, value, subtitle, icon, prefix = "" }) {
 }
 
 function ReferralProgress({ reward }) {
+  const { t } = useTranslation();
+
   return (
     <Card className="glassmorphism overflow-hidden">
       <div className="p-4">
         <div className="mb-1 text-sm font-medium text-muted-foreground">
-          Referral Progress
+          {t("dashboard.referralProgress")}
         </div>
         <div className="mb-2 flex items-center justify-between text-xs">
-          <span>Next reward at {reward.referral_count} referrals</span>
+          <span>
+            {t("dashboard.nextRewardAt", { count: reward.referral_count })}
+          </span>
           <span>{reward.current_referrals}/15</span>
         </div>
         <div className="h-2 w-full overflow-hidden rounded-full bg-secondary">
@@ -103,9 +115,9 @@ function ReferralProgress({ reward }) {
           />
         </div>
         <div className="mt-2 text-xs text-muted-foreground">
-          Reward:{" "}
+          {t("dashboard.reward")}:{" "}
           <span className="font-medium text-neon-purple">
-            ${reward.amount} Bonus
+            {t("dashboard.bonusAmount", { amount: reward.amount })}
           </span>
         </div>
       </div>

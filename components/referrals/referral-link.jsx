@@ -13,12 +13,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/contexts/auth-context";
+import { useTranslation } from "react-i18next";
 
 export function ReferralLink({ code }) {
   const { user } = useAuth();
   const [copied, setCopied] = useState(false);
+  const { t } = useTranslation();
 
-  const referralLink = `https://cryptox.com/register?ref=${code}`;
+  const referralLink = `https://berkmind.space/register?ref=${code}`;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(referralLink);
@@ -48,10 +50,8 @@ export function ReferralLink({ code }) {
     <motion.div variants={containerVariants} initial="hidden" animate="visible">
       <Card className="glassmorphism overflow-hidden">
         <CardHeader className="pb-2">
-          <CardTitle>Your Referral Link</CardTitle>
-          <CardDescription>
-            Share this link with friends to earn rewards when they join
-          </CardDescription>
+          <CardTitle>{t("referrals.yourLink")}</CardTitle>
+          <CardDescription>{t("referrals.shareToEarn")}</CardDescription>
         </CardHeader>
         <CardContent className="p-6">
           <div className="space-y-4">
@@ -68,7 +68,7 @@ export function ReferralLink({ code }) {
                 className="shrink-0 hover:bg-neon-blue/10 hover:text-neon-blue transition-colors"
               >
                 <Copy className="h-4 w-4" />
-                <span className="sr-only">Copy</span>
+                <span className="sr-only">{t("common.copy")}</span>
               </Button>
             </div>
 
@@ -79,25 +79,24 @@ export function ReferralLink({ code }) {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
               >
-                Copied to clipboard!
+                {t("common.copied")}
               </motion.p>
             )}
 
             <div className="rounded-lg border border-border/40 bg-secondary/20 p-4">
-              <h4 className="mb-2 text-sm font-medium">How it works</h4>
+              <h4 className="mb-2 text-sm font-medium">
+                {t("referrals.howItWorks")}
+              </h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>1. Share your unique referral link with friends</li>
-                <li>
-                  2. When they register using your link, they become your
-                  referral
-                </li>
-                <li>3. Earn 5% of their deposits as commission</li>
-                <li>4. Reach milestones to unlock special rewards</li>
+                <li>{t("referrals.step1")}</li>
+                <li>{t("referrals.step2")}</li>
+                <li>{t("referrals.step3")}</li>
+                <li>{t("referrals.step4")}</li>
               </ul>
             </div>
 
             <div className="space-y-2">
-              <h4 className="text-sm font-medium">Share via</h4>
+              <h4 className="text-sm font-medium">{t("referrals.shareVia")}</h4>
               <div className="flex gap-2">
                 <motion.div
                   variants={socialButtonVariants}
@@ -141,7 +140,7 @@ export function ReferralLink({ code }) {
                     className="w-full gap-2 border-neon-purple/50 hover:border-neon-purple hover:bg-neon-purple/10 transition-all duration-300"
                   >
                     <Share2 className="h-4 w-4" />
-                    <span>More Options</span>
+                    <span>{t("common.moreOptions")}</span>
                   </Button>
                 </motion.div>
               </div>

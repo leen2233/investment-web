@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom"; // Replace next/link and next/navigation
 import { motion, AnimatePresence } from "framer-motion";
-import { Bell, Menu, X, LogOut, User, Settings } from "lucide-react";
+import { Bell, Menu, X, LogOut, User, Settings, Globe } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "@/contexts/auth-context";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,6 +22,7 @@ export function Navbar() {
   const { user, logout } = useAuth();
   const location = useLocation(); // Replace usePathname
   const pathname = location.pathname; // Extract pathname from location
+  const { t, i18n } = useTranslation();
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -28,6 +30,10 @@ export function Navbar() {
 
   const toggleNotifications = () => {
     setShowNotifications(!showNotifications);
+  };
+
+  const changeLanguage = (lng) => {
+    i18n.changeLanguage(lng);
   };
 
   return (
@@ -50,65 +56,48 @@ export function Navbar() {
           <Link to="/" className="flex items-center gap-2">
             <div className="h-8 w-8 rounded-full bg-gradient-to-br from-neon-blue to-neon-purple"></div>
             <span className="text-xl font-bold">
-              Crypto<span className="text-neon-blue">X</span>
+              Berk<span className="text-neon-blue">Mind</span>
             </span>
           </Link>
         </div>
 
         <div className="hidden items-center gap-6 md:flex">
           <NavLink to="/" isActive={pathname === "/"}>
-            Dashboard
+            {t("nav.dashboard")}
           </NavLink>
           <NavLink to="/investments" isActive={pathname === "/investments"}>
-            Investments
+            {t("nav.investments")}
           </NavLink>
           <NavLink to="/game" isActive={pathname === "/game"}>
-            P2E Game
+            {t("nav.game")}
           </NavLink>
           <NavLink to="/wallet" isActive={pathname === "/wallet"}>
-            Wallet
+            {t("nav.wallet")}
           </NavLink>
           <NavLink to="/referrals" isActive={pathname === "/referrals"}>
-            Referrals
+            {t("nav.referrals")}
           </NavLink>
           <NavLink to="/profile" isActive={pathname === "/profile"}>
-            Profile
+            {t("nav.profile")}
           </NavLink>
         </div>
 
         <div className="flex items-center gap-2">
-          {/* <div className="relative">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="relative"
-              onClick={(e) => {
-                e.stopPropagation();
-                toggleNotifications();
-              }}
-            >
-              <Bell className="h-5 w-5" />
-              <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-neon-purple text-[10px]">
-                3
-              </span>
-            </Button>
-
-            <AnimatePresence>
-              {showNotifications && (
-                <motion.div
-                  className="absolute right-0 mt-2 z-50"
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <NotificationDropdown
-                    onClose={() => setShowNotifications(false)}
-                  />
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div> */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <Globe className="h-5 w-5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => changeLanguage("en")}>
+                English
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => changeLanguage("ru")}>
+                Русский
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -123,23 +112,23 @@ export function Navbar() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuLabel>{t("profile.myAccount")}</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
                 <Link to="/profile">
                   <User className="mr-2 h-4 w-4" />
-                  <span>Profile</span>
+                  <span>{t("nav.profile")}</span>
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link to="/profile/settings">
                   <Settings className="mr-2 h-4 w-4" />
-                  <span>Settings</span>
+                  <span>{t("nav.settings")}</span>
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={logout}>
                 <LogOut className="mr-2 h-4 w-4" />
-                <span>Log out</span>
+                <span>{t("nav.logout")}</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -161,43 +150,59 @@ export function Navbar() {
                 isActive={pathname === "/"}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                Dashboard
+                {t("nav.dashboard")}
               </MobileNavLink>
               <MobileNavLink
                 to="/investments"
                 isActive={pathname === "/investments"}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                Investments
+                {t("nav.investments")}
               </MobileNavLink>
               <MobileNavLink
                 to="/game"
                 isActive={pathname === "/game"}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                P2E Game
+                {t("nav.game")}
               </MobileNavLink>
               <MobileNavLink
                 to="/wallet"
                 isActive={pathname === "/wallet"}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                Wallet
+                {t("nav.wallet")}
               </MobileNavLink>
               <MobileNavLink
                 to="/referrals"
                 isActive={pathname === "/referrals"}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                Referrals
+                {t("nav.referrals")}
               </MobileNavLink>
               <MobileNavLink
                 to="/profile"
                 isActive={pathname === "/profile"}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                Profile
+                {t("nav.profile")}
               </MobileNavLink>
+              <div className="border-t border-border/40 pt-2 mt-2">
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start"
+                  onClick={() => changeLanguage("en")}
+                >
+                  English
+                </Button>
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start"
+                  onClick={() => changeLanguage("ru")}
+                >
+                  Русский
+                </Button>
+              </div>
             </div>
           </motion.div>
         )}

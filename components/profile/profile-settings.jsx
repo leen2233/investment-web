@@ -1,6 +1,6 @@
-
 import { useState } from "react";
-import { Bell, Moon, Sun, Globe, Shield } from "lucide-react";
+import { motion } from "framer-motion";
+import { Lock, AtSign, Bell, Shield, Languages } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -8,8 +8,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Switch } from "@/components/ui/switch";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { Badge } from "@/components/ui/badge";
 import {
   Select,
   SelectContent,
@@ -17,191 +20,208 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
 
-export function ProfileSettings({ onNavigateToSecurity }) {
-  const [settings, setSettings] = useState({
-    emailNotifications: true,
-    pushNotifications: false,
-    marketingEmails: false,
-    theme: "dark",
-    language: "en",
-  });
+export function ProfileSettings() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [emailNotifications, setEmailNotifications] = useState(true);
+  const [pushNotifications, setPushNotifications] = useState(true);
+  const [marketingEmails, setMarketingEmails] = useState(false);
+  const [language, setLanguage] = useState("en");
+  const { t, i18n } = useTranslation();
 
-  const handleToggleChange = (key) => {
-    setSettings((prev) => ({ ...prev, [key]: !prev[key] }));
+  const handleLanguageChange = (value) => {
+    setLanguage(value);
+    i18n.changeLanguage(value);
   };
 
-  const handleSelectChange = (key, value) => {
-    setSettings((prev) => ({ ...prev, [key]: value }));
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Simulated API call
+    } catch (error) {
+      console.error("Failed to update settings:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  const saveSettings = () => {
-    // In a real app, you would save the settings to the server
-    console.log("Saving settings:", settings);
-
-    // Show a success message
-    alert("Settings saved successfully!");
+  const containerVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+      },
+    },
   };
 
   return (
-    <div className="grid gap-6">
-      <Card className="glassmorphism overflow-hidden">
-        <CardHeader className="flex flex-row items-center justify-between">
-          <div>
-            <CardTitle>Notification Preferences</CardTitle>
+    <motion.div variants={containerVariants} initial="hidden" animate="visible">
+      <div className="space-y-6">
+        {/* <Card className="glassmorphism overflow-hidden">
+          <CardHeader>
+            <CardTitle>{t("settings.profile.title")}</CardTitle>
             <CardDescription>
-              Manage how you receive notifications
+              {t("settings.profile.description")}
             </CardDescription>
-          </div>
-          <Button
-            variant="outline"
-            size="sm"
-            className="flex items-center gap-2"
-            onClick={() => {
-              if (onNavigateToSecurity) {
-                onNavigateToSecurity();
-              } else {
-                // If we're on the profile page with tabs, this will be handled by the parent
-                const securityTab =
-                  document.querySelector('[value="security"]');
-                if (securityTab) securityTab.click();
-              }
-            }}
-          >
-            <Shield className="h-4 w-4" />
-            <span className="hidden sm:inline">Security</span>
-          </Button>
-        </CardHeader>
-        <CardContent className="p-6">
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label htmlFor="email-notifications">Email Notifications</Label>
-                <p className="text-sm text-muted-foreground">
-                  Receive notifications about account activity via email
-                </p>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label>{t("settings.profile.email")}</Label>
+                  <div className="flex items-center gap-2">
+                    <AtSign className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-sm">user@example.com</span>
+                    <Badge variant="secondary" className="ml-auto">
+                      {t("settings.profile.verified")}
+                    </Badge>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label>{t("settings.profile.language")}</Label>
+                  <Select value={language} onValueChange={handleLanguageChange}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue
+                        placeholder={t("settings.profile.selectLanguage")}
+                      />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="en">
+                        {t("settings.profile.languages.en")}
+                      </SelectItem>
+                      <SelectItem value="es">
+                        {t("settings.profile.languages.es")}
+                      </SelectItem>
+                      <SelectItem value="fr">
+                        {t("settings.profile.languages.fr")}
+                      </SelectItem>
+                      <SelectItem value="de">
+                        {t("settings.profile.languages.de")}
+                      </SelectItem>
+                      <SelectItem value="zh">
+                        {t("settings.profile.languages.zh")}
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
-              <Switch
-                id="email-notifications"
-                checked={settings.emailNotifications}
-                onCheckedChange={() => handleToggleChange("emailNotifications")}
-              />
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label htmlFor="push-notifications">Push Notifications</Label>
-                <p className="text-sm text-muted-foreground">
-                  Receive notifications on your device
-                </p>
+            </form>
+          </CardContent>
+        </Card> */}
+        {/* 
+        <Card className="glassmorphism overflow-hidden">
+          <CardHeader>
+            <CardTitle>{t("settings.notifications.title")}</CardTitle>
+            <CardDescription>
+              {t("settings.notifications.description")}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label>{t("settings.notifications.email")}</Label>
+                  <p className="text-sm text-muted-foreground">
+                    {t("settings.notifications.emailDescription")}
+                  </p>
+                </div>
+                <Switch
+                  checked={emailNotifications}
+                  onCheckedChange={setEmailNotifications}
+                />
               </div>
-              <Switch
-                id="push-notifications"
-                checked={settings.pushNotifications}
-                onCheckedChange={() => handleToggleChange("pushNotifications")}
-              />
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label htmlFor="marketing-emails">Marketing Emails</Label>
-                <p className="text-sm text-muted-foreground">
-                  Receive emails about new features and promotions
-                </p>
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label>{t("settings.notifications.push")}</Label>
+                  <p className="text-sm text-muted-foreground">
+                    {t("settings.notifications.pushDescription")}
+                  </p>
+                </div>
+                <Switch
+                  checked={pushNotifications}
+                  onCheckedChange={setPushNotifications}
+                />
               </div>
-              <Switch
-                id="marketing-emails"
-                checked={settings.marketingEmails}
-                onCheckedChange={() => handleToggleChange("marketingEmails")}
-              />
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label>{t("settings.notifications.marketing")}</Label>
+                  <p className="text-sm text-muted-foreground">
+                    {t("settings.notifications.marketingDescription")}
+                  </p>
+                </div>
+                <Switch
+                  checked={marketingEmails}
+                  onCheckedChange={setMarketingEmails}
+                />
+              </div>
             </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card> */}
 
-      <Card className="glassmorphism overflow-hidden">
-        <CardHeader>
-          <CardTitle>Appearance</CardTitle>
-          <CardDescription>Customize how the application looks</CardDescription>
-        </CardHeader>
-        <CardContent className="p-6">
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="theme">Theme</Label>
-              <Select
-                value={settings.theme}
-                onValueChange={(value) => handleSelectChange("theme", value)}
-              >
-                <SelectTrigger id="theme" className="w-full">
-                  <SelectValue placeholder="Select theme" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="light">
-                    <div className="flex items-center gap-2">
-                      <Sun className="h-4 w-4" />
-                      <span>Light</span>
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="dark">
-                    <div className="flex items-center gap-2">
-                      <Moon className="h-4 w-4" />
-                      <span>Dark</span>
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="system">
-                    <div className="flex items-center gap-2">
-                      <Bell className="h-4 w-4" />
-                      <span>System</span>
-                    </div>
-                  </SelectItem>
-                </SelectContent>
-              </Select>
+        {/* <Card className="glassmorphism overflow-hidden">
+          <CardHeader>
+            <CardTitle>{t("settings.security.title")}</CardTitle>
+            <CardDescription>
+              {t("settings.security.description")}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center gap-4">
+                <Shield className="h-8 w-8 text-neon-blue" />
+                <div className="flex-1 space-y-1">
+                  <p className="text-sm font-medium">
+                    {t("settings.security.2faTitle")}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {t("settings.security.2faDescription")}
+                  </p>
+                </div>
+                <Button variant="outline">
+                  {t("settings.security.enable")}
+                </Button>
+              </div>
+
+              <div className="flex items-center gap-4">
+                <Lock className="h-8 w-8 text-neon-purple" />
+                <div className="flex-1 space-y-1">
+                  <p className="text-sm font-medium">
+                    {t("settings.security.passwordTitle")}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {t("settings.security.passwordDescription")}
+                  </p>
+                </div>
+                <Button variant="outline">
+                  {t("settings.security.change")}
+                </Button>
+              </div>
             </div>
+          </CardContent>
+        </Card> */}
 
-            <div className="space-y-2">
-              <Label htmlFor="language">Language</Label>
-              <Select
-                value={settings.language}
-                onValueChange={(value) => handleSelectChange("language", value)}
-              >
-                <SelectTrigger id="language" className="w-full">
-                  <SelectValue placeholder="Select language" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="en">
-                    <div className="flex items-center gap-2">
-                      <Globe className="h-4 w-4" />
-                      <span>English</span>
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="es">
-                    <div className="flex items-center gap-2">
-                      <Globe className="h-4 w-4" />
-                      <span>Spanish</span>
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="fr">
-                    <div className="flex items-center gap-2">
-                      <Globe className="h-4 w-4" />
-                      <span>French</span>
-                    </div>
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      <div className="flex justify-end">
-        <Button
-          onClick={saveSettings}
-          className="bg-gradient-to-r from-neon-blue to-neon-purple hover:shadow-neon transition-all duration-300"
+        {/* <Button
+          type="submit"
+          className="w-full bg-gradient-to-r from-neon-blue to-neon-purple hover:shadow-neon-blue transition-all duration-300"
+          disabled={isSubmitting}
         >
-          Save Preferences
-        </Button>
+          {isSubmitting ? (
+            <div className="flex items-center gap-2">
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"></div>
+              <span>{t("common.saving")}</span>
+            </div>
+          ) : (
+            t("common.saveChanges")
+          )}
+        </Button> */}
       </div>
-    </div>
+    </motion.div>
   );
 }

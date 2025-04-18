@@ -14,10 +14,12 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { RippleButton } from "@/components/ui/ripple-button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useAuth } from "../../contexts/auth-context";
+import { useTranslation } from "react-i18next";
 
 export function DepositForm({ onSubmit, isSubmitting = false }) {
   const [step, setStep] = useState("initial"); // initial, txid, complete
-  const TRON_USDT_ADDRESS = "TYQysE7G4yb5x9LQZgQzSEuQGYKae47wX4";
+  const TRON_USDT_ADDRESS = import.meta.env.VITE_TRON_USDT_ADDRESS;
   const [txid, setTxid] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -25,6 +27,8 @@ export function DepositForm({ onSubmit, isSubmitting = false }) {
   const [verifiedAmount, setVerifiedAmount] = useState(null);
   const [senderAddress, setSenderAddress] = useState(null);
   const [error, setError] = useState(null);
+  const { checkAuth } = useAuth();
+  const { t } = useTranslation();
 
   const handleCopy = async (e) => {
     try {
@@ -63,11 +67,13 @@ export function DepositForm({ onSubmit, isSubmitting = false }) {
         setVerifiedAmount(response.amount);
         setSenderAddress(response.sender);
 
+        await checkAuth();
+
         if (onSubmit) {
           onSubmit(true, txid, response.amount, response.sender);
         }
       } else {
-        throw new Error(response.message || "Verification failed");
+        throw new Error(response.message || t("deposit.verificationFailed"));
       }
     } catch (error) {
       console.error("Deposit verification failed:", error);
@@ -76,9 +82,9 @@ export function DepositForm({ onSubmit, isSubmitting = false }) {
       setSenderAddress(null);
       setError(
         error.response?.data?.error ||
-        error.response?.data?.message ||
-        error.message ||
-          "Failed to verify deposit",
+          error.response?.data?.message ||
+          error.message ||
+          t("deposit.verificationFailed")
       );
 
       if (onSubmit) {
@@ -112,15 +118,12 @@ export function DepositForm({ onSubmit, isSubmitting = false }) {
     <motion.div variants={containerVariants} initial="hidden" animate="visible">
       <Card className="glassmorphism overflow-hidden">
         <CardHeader className="pb-2">
-          <CardTitle>Deposit USDT</CardTitle>
+          <CardTitle>{t("deposit.title")}</CardTitle>
           <CardDescription>
-            {step === "initial" && "Send USDT (TRC20) to the address below"}
-            {step === "txid" &&
-              "Enter your transaction ID to verify your payment"}
+            {step === "initial" && t("deposit.instructions")}
+            {step === "txid" && t("deposit.enterTxId")}
             {step === "complete" &&
-              (isSuccess
-                ? "Payment successful!"
-                : "Payment verification failed")}
+              (isSuccess ? t("deposit.success") : t("deposit.failed"))}
           </CardDescription>
         </CardHeader>
         <CardContent className="p-6">
@@ -136,7 +139,7 @@ export function DepositForm({ onSubmit, isSubmitting = false }) {
                   <Alert className="bg-green-500/10 text-green-500 border-green-500/20">
                     <CheckCircle className="h-4 w-4" />
                     <AlertDescription>
-                      Deposit verified! Your funds will be credited shortly.
+                      {t("deposit.verificationSuccessful")}
                     </AlertDescription>
                   </Alert>
                   <div className="flex flex-col items-center justify-center mt-4 py-6 rounded-lg bg-gradient-to-r from-neon-blue/5 to-neon-purple/5">
@@ -145,7 +148,7 @@ export function DepositForm({ onSubmit, isSubmitting = false }) {
                       {verifiedAmount} USDT
                     </div>
                     <div className="text-sm text-muted-foreground mt-2">
-                      from {senderAddress}
+                      {t("deposit.fromAddress", { address: senderAddress })}
                     </div>
                   </div>
                 </>
@@ -153,8 +156,7 @@ export function DepositForm({ onSubmit, isSubmitting = false }) {
                 <Alert className="bg-red-500/10 text-red-500 border-red-500/20">
                   <XCircle className="h-4 w-4" />
                   <AlertDescription>
-                    {error ||
-                      "We couldn't verify your transaction. Please check the transaction ID and try again."}
+                    {error || t("deposit.verificationFailed")}
                   </AlertDescription>
                 </Alert>
               )}
@@ -165,7 +167,7 @@ export function DepositForm({ onSubmit, isSubmitting = false }) {
             {step === "initial" && (
               <div className="rounded-lg border border-border/40 p-4 bg-secondary/10">
                 <h4 className="text-sm font-medium mb-2">
-                  Tron USDT Deposit Address
+                  {t("deposit.addressTitle")}
                 </h4>
                 <div className="flex flex-col items-center space-y-4">
                   <QRCodeSVG
@@ -189,7 +191,7 @@ export function DepositForm({ onSubmit, isSubmitting = false }) {
                         className="shrink-0 hover:bg-neon-blue/10 hover:text-neon-blue transition-colors"
                       >
                         <Copy className="h-4 w-4" />
-                        <span className="sr-only">Copy</span>
+                        <span className="sr-only">{t("common.copy")}</span>
                       </Button>
                     </div>
                     <AnimatePresence>
@@ -200,7 +202,7 @@ export function DepositForm({ onSubmit, isSubmitting = false }) {
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0 }}
                         >
-                          Copied to clipboard!
+                          {t("common.copied")}
                         </motion.p>
                       )}
                     </AnimatePresence>
@@ -208,16 +210,16 @@ export function DepositForm({ onSubmit, isSubmitting = false }) {
                 </div>
                 <div className="mt-4 space-y-2">
                   <p className="text-xs text-muted-foreground">
-                    • Send only USDT-TRC20 to this address
+                    {t("deposit.warning1")}
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    • Minimum deposit: 10 USDT
+                    {t("deposit.warning2")}
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    • Transaction usually confirms within 30-60 seconds
+                    {t("deposit.warning3")}
                   </p>
                   <p className="text-xs font-medium text-yellow-500">
-                    • Always verify the address before sending!
+                    {t("deposit.warning4")}
                   </p>
                 </div>
               </div>
@@ -227,11 +229,10 @@ export function DepositForm({ onSubmit, isSubmitting = false }) {
               <div className="space-y-4">
                 <div className="rounded-lg border border-border/40 p-4 bg-secondary/10">
                   <h4 className="text-sm font-medium mb-2">
-                    USDT-TRC20 Payment Verification
+                    {t("deposit.verificationTitle")}
                   </h4>
                   <p className="text-sm text-muted-foreground mb-4">
-                    Please enter the Tron (TRC20) transaction ID of your USDT
-                    payment.
+                    {t("deposit.verificationInstructions")}
                   </p>
 
                   <div className="space-y-2">
@@ -239,16 +240,16 @@ export function DepositForm({ onSubmit, isSubmitting = false }) {
                       id="txid"
                       value={txid}
                       onChange={(e) => setTxid(e.target.value)}
-                      placeholder="e.g. 0xd731...5a12"
+                      placeholder={t("deposit.txIdPlaceholder")}
                       className="font-mono"
                     />
                   </div>
                   <div className="mt-4">
                     <p className="text-xs text-muted-foreground">
-                      • Make sure to wait for at least 1 block confirmation
+                      {t("deposit.tip1")}
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      • You can check the transaction status on{" "}
+                      {t("deposit.tip2")}{" "}
                       <a
                         href={`https://tronscan.org/#/transaction/${txid}`}
                         target="_blank"
@@ -267,18 +268,18 @@ export function DepositForm({ onSubmit, isSubmitting = false }) {
               <div className="space-y-4">
                 <div className="rounded-lg border border-border/40 p-4 bg-secondary/10">
                   <h4 className="text-sm font-medium mb-2">
-                    Transaction Details
+                    {t("deposit.transactionDetails")}
                   </h4>
                   <div className="space-y-2">
                     <div className="flex justify-between">
                       <span className="text-sm text-muted-foreground">
-                        Payment Method:
+                        {t("deposit.paymentMethod")}:
                       </span>
                       <span className="font-medium">USDT-TRC20</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-sm text-muted-foreground">
-                        Transaction ID:
+                        {t("deposit.transactionId")}:
                       </span>
                       <span className="font-mono text-xs">
                         {txid.substring(0, 10)}...
@@ -286,12 +287,14 @@ export function DepositForm({ onSubmit, isSubmitting = false }) {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-sm text-muted-foreground">
-                        Status:
+                        {t("common.status")}:
                       </span>
                       <span
-                        className={`font-medium ${isSuccess ? "text-green-500" : "text-red-500"}`}
+                        className={`font-medium ${
+                          isSuccess ? "text-green-500" : "text-red-500"
+                        }`}
                       >
-                        {isSuccess ? "Success" : "Failed"}
+                        {isSuccess ? t("common.success") : t("common.failed")}
                       </span>
                     </div>
                   </div>
@@ -311,14 +314,14 @@ export function DepositForm({ onSubmit, isSubmitting = false }) {
               {isProcessing ? (
                 <div className="flex items-center gap-2">
                   <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"></div>
-                  <span>Verifying...</span>
+                  <span>{t("common.verifying")}</span>
                 </div>
               ) : step === "initial" ? (
-                "I Paid"
+                t("deposit.iPaid")
               ) : step === "txid" ? (
-                "Verify Payment"
+                t("deposit.verifyPayment")
               ) : (
-                "New Deposit"
+                t("deposit.newDeposit")
               )}
             </RippleButton>
 
@@ -328,7 +331,7 @@ export function DepositForm({ onSubmit, isSubmitting = false }) {
                 onClick={() => setStep("initial")}
                 className="w-full text-center text-sm text-muted-foreground hover:text-foreground transition-colors mt-2"
               >
-                Go Back
+                {t("common.goBack")}
               </button>
             )}
 
@@ -338,7 +341,7 @@ export function DepositForm({ onSubmit, isSubmitting = false }) {
                 onClick={() => setStep("txid")}
                 className="w-full text-center text-sm text-muted-foreground hover:text-foreground transition-colors mt-2"
               >
-                Try Again
+                {t("common.tryAgain")}
               </button>
             )}
           </form>

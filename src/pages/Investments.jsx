@@ -3,10 +3,12 @@ import { InvestmentPlansFull } from "@/components/investments/investment-plans-f
 import { ActiveInvestments } from "@/components/investments/active-investments";
 import { api } from "@/lib/axios";
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function InvestmentsPage() {
   const [plans, setPlans] = useState([]);
   const [activeInvestments, setActiveInvestments] = useState([]);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const fetchPlans = async () => {
@@ -26,8 +28,8 @@ export default function InvestmentsPage() {
   return (
     <div className="space-y-6">
       <DashboardHeader
-        title="Investment Plans"
-        description="Choose from our range of investment plans with different risk levels and returns."
+        title={t("investments.availablePlans")}
+        description={t("investments.choosePlan")}
       />
 
       <InvestmentPlansFull plans={plans} />
