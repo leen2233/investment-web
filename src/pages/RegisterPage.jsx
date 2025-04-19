@@ -1,18 +1,20 @@
 import { useEffect } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom"; // Replace next/navigation
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/auth-context";
 import { RegistrationForm } from "@/components/auth/registration-form";
+import { useTranslation } from "react-i18next";
 
 export default function RegisterPage() {
   const { isAuthenticated, isLoading } = useAuth();
-  const navigate = useNavigate(); // Replace useRouter
-  const [searchParams] = useSearchParams(); // Replace useSearchParams from next/navigation
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const referralCode = searchParams.get("ref") || "";
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!isLoading && isAuthenticated) {
-      navigate("/"); // Replace router.push
+      navigate("/");
     }
   }, [isLoading, isAuthenticated, navigate]);
 
@@ -64,7 +66,7 @@ export default function RegisterPage() {
             transition={{ duration: 0.5, delay: 0.3 }}
             className="text-3xl font-bold tracking-tight"
           >
-            Crypto<span className="text-neon-blue">X</span>
+            Berk<span className="text-neon-blue">Mind</span>
           </motion.h1>
           <motion.p
             initial={{ opacity: 0 }}
@@ -72,7 +74,7 @@ export default function RegisterPage() {
             transition={{ duration: 0.5, delay: 0.4 }}
             className="mt-2 text-muted-foreground"
           >
-            Investment & P2E Platform
+            {t("auth.registerDescription")}
           </motion.p>
         </div>
 

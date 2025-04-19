@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "@/contexts/auth-context";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,6 +24,7 @@ export function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const { t } = useTranslation();
 
   const navigate = useNavigate();
   const { setUser } = useAuth();
@@ -36,7 +38,7 @@ export function LoginForm() {
         password,
       });
 
-      const token = response.token; // Adjust based on your API response
+      const token = response.token;
       localStorage.setItem("token", token);
 
       const userResponse = await api.get("/users/me/");
@@ -46,7 +48,7 @@ export function LoginForm() {
       navigate("/");
     } catch (error) {
       const errorMessage =
-        error.response?.data?.message || "Given credentials are invalid";
+        error.response?.data?.message || t("auth.invalidCredentials");
       setError(errorMessage);
     } finally {
       setIsSubmitting(false);
@@ -60,15 +62,7 @@ export function LoginForm() {
     if (!username || !password) return;
 
     setIsSubmitting(true);
-
-    // try {
     await login(username, password);
-    // } catch (error) {
-    //   console.error("Login failed:", error);
-    //   setError("Invalid username or password");
-    // } finally {
-    // setIsSubmitting(false);
-    // }
   };
 
   return (
@@ -79,10 +73,8 @@ export function LoginForm() {
     >
       <Card className="glassmorphism">
         <CardHeader>
-          <CardTitle>Log in to your account</CardTitle>
-          <CardDescription>
-            Enter your credentials to access your account
-          </CardDescription>
+          <CardTitle>{t("auth.loginTitle")}</CardTitle>
+          <CardDescription>{t("auth.loginDescription")}</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -93,12 +85,12 @@ export function LoginForm() {
             )}
 
             <div className="space-y-2">
-              <Label htmlFor="username">Username</Label>
+              <Label htmlFor="username">{t("auth.username")}</Label>
               <div className="relative">
                 <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
                   id="username"
-                  placeholder="Enter your username"
+                  placeholder={t("auth.enterUsername")}
                   className="pl-10"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
@@ -108,13 +100,13 @@ export function LoginForm() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">{t("auth.password")}</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
                   id="password"
                   type={showPassword ? "text" : "password"}
-                  placeholder="Enter your password"
+                  placeholder={t("auth.enterPassword")}
                   className="pl-10 pr-10"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -143,10 +135,10 @@ export function LoginForm() {
                 {isSubmitting ? (
                   <div className="flex items-center gap-2">
                     <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"></div>
-                    <span>Logging in...</span>
+                    <span>{t("auth.loggingIn")}</span>
                   </div>
                 ) : (
-                  "Log In"
+                  t("auth.login")
                 )}
               </Button>
             </motion.div>
@@ -154,9 +146,9 @@ export function LoginForm() {
         </CardContent>
         <CardFooter className="flex flex-col text-center text-sm text-muted-foreground">
           <p className="mt-2">
-            Don't have an account?{" "}
+            {t("auth.noAccount")}{" "}
             <Link to="/register" className="text-neon-blue hover:underline">
-              Register
+              {t("auth.register")}
             </Link>
           </p>
         </CardFooter>

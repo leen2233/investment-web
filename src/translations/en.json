@@ -19,7 +19,18 @@
     "noAccount": "Don't have an account?",
     "haveAccount": "Already have an account?",
     "signUp": "Sign up",
-    "signIn": "Sign in"
+    "signIn": "Sign in",
+    "loginTitle": "Log in to your account",
+    "loginDescription": "Enter your credentials to access your account",
+    "registerTitle": "Create your account",
+    "registerDescription": "Complete the form below to create your account",
+    "username": "Username",
+    "enterUsername": "Enter your username",
+    "enterPassword": "Enter your password",
+    "terms": "By creating an account, you agree to our Terms of Service and Privacy Policy",
+    "verifying": "Verifying...",
+    "loggingIn": "Logging in...",
+    "creatingAccount": "Creating Account..."
   },
   "profile": {
     "myAccount": "My Account",
@@ -127,6 +138,7 @@
   },
   "referrals": {
     "yourLink": "Your Referral Link",
+    "enterCode": "Enter referral code",
     "totalReferrals": "Total Referrals",
     "earnings": "Earnings",
     "copyLink": "Copy Link",

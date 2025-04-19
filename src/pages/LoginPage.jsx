@@ -1,17 +1,18 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // Replace useRouter
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/auth-context";
 import { LoginForm } from "@/components/auth/login-form";
+import { useTranslation } from "react-i18next";
 
 export default function LoginPage() {
   const { isAuthenticated, isLoading } = useAuth();
-  const navigate = useNavigate(); // Replace useRouter
-
+  const navigate = useNavigate();
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!isLoading && isAuthenticated) {
-      navigate("/"); // Replace router.push
+      navigate("/");
     }
   }, [isLoading, isAuthenticated, navigate]);
 
@@ -63,7 +64,7 @@ export default function LoginPage() {
             transition={{ duration: 0.5, delay: 0.3 }}
             className="text-3xl font-bold tracking-tight"
           >
-            Crypto<span className="text-neon-blue">X</span>
+            Berk<span className="text-neon-blue">Mind</span>
           </motion.h1>
           <motion.p
             initial={{ opacity: 0 }}
@@ -71,7 +72,7 @@ export default function LoginPage() {
             transition={{ duration: 0.5, delay: 0.4 }}
             className="mt-2 text-muted-foreground"
           >
-            Investment & P2E Platform
+            {t("auth.loginDescription")}
           </motion.p>
         </div>
 

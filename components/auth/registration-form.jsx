@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom"; // Replace next/link
-import { useNavigate } from "react-router-dom"; // Replace useRouter
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/auth-context";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -18,14 +18,15 @@ import { Lock, User, Eye, EyeOff, Users, AlertCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
 export function RegistrationForm({ initialReferralCode = "" }) {
-  const navigate = useNavigate(); // Replace useRouter
+  const navigate = useNavigate();
   const { register, checkAuth } = useAuth();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const checkExistingAuth = async () => {
       const isAuthenticated = await checkAuth();
       if (isAuthenticated) {
-        navigate("/"); // Replace router.push
+        navigate("/");
       }
     };
     checkExistingAuth();
@@ -54,7 +55,6 @@ export function RegistrationForm({ initialReferralCode = "" }) {
       const response = await register(username, password, referralCode || null);
 
       if (response.error) {
-        console.log("error", response.error);
         // Handle non-field errors
         if (response.error.non_field_errors) {
           setGeneralError(response.error.non_field_errors[0]);
@@ -81,7 +81,7 @@ export function RegistrationForm({ initialReferralCode = "" }) {
       }
     } catch (error) {
       console.log(error);
-      setGeneralError("An unexpected error occurred. Please try again.");
+      setGeneralError(t("common.error"));
       setIsSubmitting(false);
     }
   };
@@ -98,10 +98,8 @@ export function RegistrationForm({ initialReferralCode = "" }) {
     >
       <Card className="glassmorphism">
         <CardHeader>
-          <CardTitle>Create your account</CardTitle>
-          <CardDescription>
-            Complete the form below to create your account.
-          </CardDescription>
+          <CardTitle>{t("auth.registerTitle")}</CardTitle>
+          <CardDescription>{t("auth.registerDescription")}</CardDescription>
         </CardHeader>
         <CardContent>
           {generalError && (
@@ -112,12 +110,12 @@ export function RegistrationForm({ initialReferralCode = "" }) {
           )}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="username">Username</Label>
+              <Label htmlFor="username">{t("auth.username")}</Label>
               <div className="relative">
                 <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
                   id="username"
-                  placeholder="Enter your username"
+                  placeholder={t("auth.enterUsername")}
                   className={`pl-10 ${
                     getFieldError("username") ? "border-destructive" : ""
                   }`}
@@ -134,13 +132,13 @@ export function RegistrationForm({ initialReferralCode = "" }) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">{t("auth.password")}</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
                   id="password"
                   type={showPassword ? "text" : "password"}
-                  placeholder="Enter your password"
+                  placeholder={t("auth.enterPassword")}
                   className="pl-10 pr-10"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -161,18 +159,17 @@ export function RegistrationForm({ initialReferralCode = "" }) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="referral-code">Referral Code</Label>
+              <Label htmlFor="referral-code">{t("referrals.yourCode")}</Label>
               <div className="relative">
                 <Users className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
                   id="referral-code"
-                  placeholder="Enter referral code"
+                  placeholder={t("referrals.enterCode")}
                   className={`pl-10 ${
                     getFieldError("referral") ? "border-destructive" : ""
                   }`}
                   value={referralCode}
                   onChange={(e) => setReferralCode(e.target.value)}
-                  required
                 />
               </div>
               {getFieldError("referral") && (
@@ -191,24 +188,21 @@ export function RegistrationForm({ initialReferralCode = "" }) {
                 {isSubmitting ? (
                   <div className="flex items-center gap-2">
                     <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"></div>
-                    <span>Creating Account...</span>
+                    <span>{t("auth.creatingAccount")}</span>
                   </div>
                 ) : (
-                  "Create Account"
+                  t("auth.signUp")
                 )}
               </Button>
             </motion.div>
           </form>
         </CardContent>
         <CardFooter className="flex flex-col text-center text-sm text-muted-foreground">
-          <p>
-            By creating an account, you agree to our Terms of Service and
-            Privacy Policy.
-          </p>
+          <p>{t("auth.terms")}</p>
           <p className="mt-2">
-            Already have an account?{" "}
+            {t("auth.haveAccount")}{" "}
             <Link to="/login" className="text-neon-blue hover:underline">
-              Log in
+              {t("auth.login")}
             </Link>
           </p>
         </CardFooter>
