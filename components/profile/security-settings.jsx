@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Lock, Eye, EyeOff, Shield, Smartphone } from "lucide-react";
+import { Lock, Eye, EyeOff, Shield, Smartphone, XCircle } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import {
   Card,
@@ -13,9 +13,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { api } from "../../lib/axios";
 
 export function SecuritySettings() {
   const { t } = useTranslation();
+  const [sessions, setSessions] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -26,6 +29,30 @@ export function SecuritySettings() {
     confirmPassword: "",
   });
 
+  useEffect(() => {
+    fetchSessions();
+  }, []);
+
+  const fetchSessions = async () => {
+    try {
+      const response = await api.get("/users/sessions");
+      setSessions(response);
+    } catch (error) {
+      console.error("Failed to fetch sessions:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteSession = async (sessionId) => {
+    try {
+      await api.delete(`/users/sessions/${sessionId}/`);
+      setSessions(sessions.filter((session) => session.id !== sessionId));
+    } catch (error) {
+      console.error("Failed to delete session:", error);
+    }
+  };
+
   const handlePasswordChange = (e) => {
     const { name, value } = e.target;
     setPasswordForm((prev) => ({ ...prev, [name]: value }));
@@ -34,7 +61,6 @@ export function SecuritySettings() {
   const handlePasswordSubmit = (e) => {
     e.preventDefault();
 
-    // Validate passwords
     if (passwordForm.newPassword !== passwordForm.confirmPassword) {
       alert("New passwords don't match!");
       return;
@@ -45,13 +71,10 @@ export function SecuritySettings() {
       return;
     }
 
-    // In a real app, you would validate and update the password on the server
     console.log("Password change submitted:", passwordForm);
 
-    // Show success message
     alert("Password changed successfully!");
 
-    // Reset form
     setPasswordForm({
       currentPassword: "",
       newPassword: "",
@@ -182,37 +205,60 @@ export function SecuritySettings() {
         </CardHeader>
         <CardContent className="p-6">
           <div className="space-y-4">
-            <div className="rounded-lg border p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h4 className="font-medium">
-                    {t("settings.security.currentSession")}
-                  </h4>
-                  <p className="text-sm text-muted-foreground">
-                    {t("settings.security.browserInfo", {
-                      browser: "Chrome",
-                      os: "Windows",
-                    })}{" "}
-                    • {t("settings.security.ipAddress", { ip: "192.168.1.1" })}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {t("settings.security.startedAt", {
-                      time: "Today at 10:30 AM",
-                    })}
-                  </p>
+            {loading ? (
+              <p>Loading sessions...</p>
+            ) : (
+              sessions.map((session) => (
+                <div key={session.id} className="rounded-lg border p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="font-medium">
+                        {session.browser} on {session.os}
+                      </h4>
+                      <p className="text-sm text-muted-foreground">
+                        {t("settings.security.ipAddress", {
+                          ip: session.ip_address,
+                        })}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        Started: {new Date(session.created_at).toLocaleString()}
+                        {" • "}
+                        Last seen:{" "}
+                        {new Date(session.last_seen).toLocaleString()}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      {session.is_active && (
+                        <div className="rounded-full bg-green-500/10 px-2 py-1 text-xs font-medium text-green-500">
+                          {t("settings.security.activeNow")}
+                        </div>
+                      )}
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleDeleteSession(session.id)}
+                        className="text-red-500 hover:text-red-600"
+                      >
+                        <XCircle className="h-5 w-5" />
+                      </Button>
+                    </div>
+                  </div>
                 </div>
-                <div className="rounded-full bg-green-500/10 px-2 py-1 text-xs font-medium text-green-500">
-                  {t("settings.security.activeNow")}
-                </div>
-              </div>
-            </div>
+              ))
+            )}
 
             <Button
               variant="outline"
               className="w-full"
-              onClick={() => {
-                // In a real app, this would log out all other sessions
-                alert("All other sessions have been logged out.");
+              onClick={async () => {
+                const currentSession = sessions.find((s) => s.is_active);
+                if (currentSession) {
+                  await Promise.all(
+                    sessions
+                      .filter((s) => s.id !== currentSession.id)
+                      .map((s) => handleDeleteSession(s.id))
+                  );
+                }
               }}
             >
               {t("settings.security.logoutOthers")}

@@ -1,4 +1,3 @@
-import { ThemeProvider } from "@/components/theme-provider";
 import { Providers } from "./providers";
 import DashboardPage from "./pages/Dashboard";
 import { Navbar } from "@/components/dashboard/navbar";
@@ -47,49 +46,39 @@ function MainLayout({ children }) {
 
 export default function App() {
   return (
-    <ThemeProvider
-      attribute="class"
-      defaultTheme="dark"
-      enableSystem={false}
-      disableTransitionOnChange
-    >
-      <Providers>
-        <div className="min-h-screen bg-background">
-          <Routes>
-            {/* Auth pages without Navbar/Sidebar */}
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            {/* All other pages nested inside MainLayout */}
-            <Route
-              path="*"
-              element={
-                <MainLayout>
-                  <Routes>
-                    <Route path="/" element={<DashboardPage />} />
-                    <Route path="/error" element={<div>Error Page</div>} />
-                    <Route path="/profile" element={<ProfilePage />} />
-                    <Route path="/profile/edit" element={<EditProfilePage />} />
-                    <Route path="/investments" element={<InvestmentsPage />} />
-                    <Route path="/game" element={<GamePage />} />
-                    <Route path="/wallet" element={<WalletPage />} />
-                    <Route
-                      path="/wallet/transactions"
-                      element={<TransactionsPage />}
-                    />
-                    <Route path="/referrals" element={<ReferralsPage />} />
-                    <Route
-                      path="/profile/settings"
-                      element={<SettingsPage />}
-                    />
-                    <Route path="/wallet/deposit" element={<DepositPage />} />
-                    <Route path="/wallet/withdraw" element={<WithdrawPage />} />
-                  </Routes>
-                </MainLayout>
-              }
-            />
-          </Routes>
-        </div>
-      </Providers>
-    </ThemeProvider>
+    <Providers>
+      <div className="min-h-screen bg-background">
+        <Routes>
+          {/* Auth pages without Navbar/Sidebar */}
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          {/* All other pages nested inside MainLayout */}
+          <Route
+            path="*"
+            element={
+              <MainLayout>
+                <Routes>
+                  <Route path="/" element={<DashboardPage />} />
+                  <Route path="/error" element={<div>Error Page</div>} />
+                  <Route path="/profile" element={<ProfilePage />} />
+                  <Route path="/profile/edit" element={<EditProfilePage />} />
+                  <Route path="/investments" element={<InvestmentsPage />} />
+                  <Route path="/game" element={<GamePage />} />
+                  <Route path="/wallet" element={<WalletPage />} />
+                  <Route
+                    path="/wallet/transactions"
+                    element={<TransactionsPage />}
+                  />
+                  <Route path="/referrals" element={<ReferralsPage />} />
+                  <Route path="/profile/settings" element={<SettingsPage />} />
+                  <Route path="/wallet/deposit" element={<DepositPage />} />
+                  <Route path="/wallet/withdraw" element={<WithdrawPage />} />
+                </Routes>
+              </MainLayout>
+            }
+          />
+        </Routes>
+      </div>
+    </Providers>
   );
 }
