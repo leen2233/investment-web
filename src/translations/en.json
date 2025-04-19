@@ -213,7 +213,13 @@
     "goBack": "Go Back",
     "tryAgain": "Try Again",
     "upload": "Upload image",
-    "maxSize": "Max 2MB"
+    "maxSize": "Max 2MB",
+    "filters": "Filters",
+    "filterDescription": "Filter transactions by type, status, and date",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "description": "Description",
+    "noResults": "No transactions found"
   },
   "transactions": {
     "viewAll": "View All Transactions",
@@ -232,7 +238,7 @@
     "withdrawals": "Withdrawals",
     "earnings": "Earnings",
     "statuses": {
-      "completed": "Completed",
+      "success": "Success",
       "pending": "Pending",
       "failed": "Failed",
       "processing": "Processing"

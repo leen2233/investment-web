@@ -16,6 +16,7 @@ import WithdrawPage from "./pages/WithdrawPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import EditProfilePage from "./pages/EditProfilePage";
+import TransactionsPage from "./pages/TransactionsPage";
 import "@/src/translations/i18n";
 
 // Layout component for pages with Navbar and Sidebar
@@ -71,6 +72,10 @@ export default function App() {
                     <Route path="/investments" element={<InvestmentsPage />} />
                     <Route path="/game" element={<GamePage />} />
                     <Route path="/wallet" element={<WalletPage />} />
+                    <Route
+                      path="/wallet/transactions"
+                      element={<TransactionsPage />}
+                    />
                     <Route path="/referrals" element={<ReferralsPage />} />
                     <Route
                       path="/profile/settings"

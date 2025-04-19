@@ -17,6 +17,7 @@ import { Separator } from "@/components/ui/separator";
 import { api } from "@/lib/axios";
 import { format } from "date-fns";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
 export function TransactionHistory() {
   const [activeTab, setActiveTab] = useState("all");
@@ -196,14 +197,16 @@ export function TransactionHistory() {
             whileHover="hover"
             whileTap="tap"
           >
-            <Button
-              variant="outline"
-              className="gap-2 border-neon-purple/50 hover:border-neon-purple hover:bg-neon-purple/10 transition-all duration-300"
-            >
-              <History className="h-4 w-4" />
-              {t("transactions.viewAll")}
-              <ExternalLink className="h-4 w-4" />
-            </Button>
+            <Link to={"/wallet/transactions"}>
+              <Button
+                variant="outline"
+                className="gap-2 border-neon-purple/50 hover:border-neon-purple hover:bg-neon-purple/10 transition-all duration-300"
+              >
+                <History className="h-4 w-4" />
+                {t("transactions.viewAll")}
+                <ExternalLink className="h-4 w-4" />
+              </Button>
+            </Link>
           </motion.div>
         </CardFooter>
       </Card>

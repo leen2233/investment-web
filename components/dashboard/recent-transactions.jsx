@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowUpRight, ArrowDownRight, Clock } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 export function RecentTransactions({ transactions }) {
@@ -162,12 +163,14 @@ export function RecentTransactions({ transactions }) {
           </motion.div>
 
           <div className="mt-4 text-center">
-            <Button
-              variant="link"
-              className="text-sm text-muted-foreground hover:text-neon-blue"
-            >
-              {t("transactions.viewAll")}
-            </Button>
+            <Link to="/wallet/transactions">
+              <Button
+                variant="link"
+                className="text-sm text-muted-foreground hover:text-neon-blue"
+              >
+                {t("transactions.viewAll")}
+              </Button>
+            </Link>
           </div>
         </CardContent>
       </Card>
