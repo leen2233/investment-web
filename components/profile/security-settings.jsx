@@ -22,6 +22,8 @@ export function SecuritySettings() {
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const [passwordForm, setPasswordForm] = useState({
     currentPassword: "",
@@ -58,28 +60,41 @@ export function SecuritySettings() {
     setPasswordForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handlePasswordSubmit = (e) => {
+  const handlePasswordSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+    setSuccess("");
 
     if (passwordForm.newPassword !== passwordForm.confirmPassword) {
-      alert("New passwords don't match!");
+      setError(t("settings.security.passwordMismatch"));
       return;
     }
 
     if (passwordForm.newPassword.length < 8) {
-      alert("Password must be at least 8 characters long!");
+      setError(t("settings.security.passwordTooShort"));
       return;
     }
 
-    console.log("Password change submitted:", passwordForm);
+    try {
+      await api.post("/users/change-password/", {
+        current_password: passwordForm.currentPassword,
+        new_password: passwordForm.newPassword,
+      });
 
-    alert("Password changed successfully!");
-
-    setPasswordForm({
-      currentPassword: "",
-      newPassword: "",
-      confirmPassword: "",
-    });
+      setSuccess(t("settings.security.passwordChangeSuccess"));
+      setPasswordForm({
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+      });
+    } catch (error) {
+      if (error.response?.data?.message) {
+        setError(error.response.data.message);
+      } else {
+        setError(t("settings.security.passwordChangeError"));
+      }
+      console.error("Failed to change password:", error);
+    }
   };
 
   return (
@@ -185,6 +200,9 @@ export function SecuritySettings() {
                 {t("settings.security.passwordRequirements")}
               </p>
             </div>
+
+            {error && <p className="text-red-500 text-sm">{error}</p>}
+            {success && <p className="text-green-500 text-sm">{success}</p>}
 
             <Button
               type="submit"

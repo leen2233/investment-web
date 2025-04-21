@@ -309,7 +309,11 @@
       "browserInfo": "{{browser}} на {{os}}",
       "activeNow": "Активна",
       "startedAt": "Начало: {{time}}",
-      "ipAddress": "IP: {{ip}}"
+      "ipAddress": "IP: {{ip}}",
+      "passwordMismatch": "Пароли не совпадают",
+      "passwordTooShort": "Пароль слишком короткий",
+      "passwordChangeSuccess": "Пароль успешно изменён",
+      "passwordChangeError": "Текущий пароль неверен"
     }
   },
   "calculator": {

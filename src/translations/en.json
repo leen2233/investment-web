@@ -377,7 +377,11 @@
       "browserInfo": "{{browser}} on {{os}}",
       "activeNow": "Active",
       "startedAt": "Started: {{time}}",
-      "ipAddress": "IP: {{ip}}"
+      "ipAddress": "IP: {{ip}}",
+      "passwordMismatch": "Passwords do not match",
+      "passwordTooShort": "Password is too short",
+      "passwordChangeSuccess": "Password changed successfully",
+      "passwordChangeError": "Current password is incorrect"
     }
   }
 }
