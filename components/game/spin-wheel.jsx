@@ -48,19 +48,29 @@ export function SpinWheel() {
     setIsSpinning(true);
     setSpinResult(null);
 
-    const result = await api.post("/spin-wheel", { amount: betAmount });
-    if (result.is_positive) {
-      setSpinResult(2);
-      setUser((prev) => ({ ...prev, balance: prev.balance + result.amount }));
-    } else {
-      setSpinResult(0);
-      setUser((prev) => ({ ...prev, balance: prev.balance - betAmount }));
-    }
+    try {
+      // Make the API call immediately but store the result
+      const result = await api.post("/spin-wheel", { amount: betAmount });
 
-    setSpinHistory((prev) =>
-      [result.is_positive ? 2 : 0, ...prev].slice(0, 10)
-    );
-    setIsSpinning(false);
+      // Add a delay of 2.5 seconds before showing the result
+      await new Promise((resolve) => setTimeout(resolve, 2500));
+
+      if (result.is_positive) {
+        setSpinResult(2);
+        setUser((prev) => ({ ...prev, balance: prev.balance + result.amount }));
+      } else {
+        setSpinResult(0);
+        setUser((prev) => ({ ...prev, balance: prev.balance - betAmount }));
+      }
+
+      setSpinHistory((prev) =>
+        [result.is_positive ? 2 : 0, ...prev].slice(0, 10)
+      );
+    } catch (error) {
+      console.error("Error during spin:", error);
+    } finally {
+      setIsSpinning(false);
+    }
   };
 
   const containerVariants = {

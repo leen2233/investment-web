@@ -38,7 +38,6 @@ export function UserBalance({ balance }) {
   return (
     <motion.div variants={containerVariants} initial="hidden" animate="visible">
       <Card className="glassmorphism overflow-hidden h-full">
-        <div className="absolute inset-0 bg-glow-purple opacity-10" />
         <CardHeader className="pb-3">
           <CardTitle>{t("wallet.availableBalance")}</CardTitle>
         </CardHeader>
@@ -49,38 +48,48 @@ export function UserBalance({ balance }) {
         </CardContent>
         <CardFooter className="flex flex-col items-start gap-2">
           <div className="flex w-full gap-2">
-            <motion.div
-              className="flex-1"
-              variants={buttonVariants}
-              initial="initial"
-              whileHover="hover"
-              whileTap="tap"
+            <Button
+              asChild
+              className="flex-1 gap-2 bg-gradient-to-r from-neon-purple to-neon-blue hover:shadow-neon transition-all duration-300"
             >
-              <Link to="/wallet/deposit" className="w-full block z-10">
-                <Button className="w-full gap-2 bg-gradient-to-r from-neon-purple to-neon-blue hover:shadow-neon transition-all duration-300">
+              <motion.div
+                variants={buttonVariants}
+                initial="initial"
+                whileHover="hover"
+                whileTap="tap"
+                className="w-full"
+              >
+                <Link
+                  to="/wallet/deposit"
+                  className="flex items-center justify-center gap-2 w-full h-full"
+                >
                   <DollarSign className="h-4 w-4" />
                   {t("wallet.deposit")}
-                </Button>
-              </Link>
-            </motion.div>
+                </Link>
+              </motion.div>
+            </Button>
 
-            <motion.div
-              className="flex-1"
-              variants={buttonVariants}
-              initial="initial"
-              whileHover="hover"
-              whileTap="tap"
+            <Button
+              asChild
+              variant="outline"
+              className="flex-1 gap-2 border-neon-blue/50 hover:border-neon-blue hover:bg-neon-blue/10 transition-all duration-300"
             >
-              <Link to="/wallet/withdraw" className="w-full block">
-                <Button
-                  variant="outline"
-                  className="w-full gap-2 border-neon-blue/50 hover:border-neon-blue hover:bg-neon-blue/10 transition-all duration-300"
+              <motion.div
+                variants={buttonVariants}
+                initial="initial"
+                whileHover="hover"
+                whileTap="tap"
+                className="w-full"
+              >
+                <Link
+                  to="/wallet/withdraw"
+                  className="flex items-center justify-center gap-2 w-full h-full"
                 >
                   <CreditCard className="h-4 w-4" />
                   {t("wallet.withdraw")}
-                </Button>
-              </Link>
-            </motion.div>
+                </Link>
+              </motion.div>
+            </Button>
           </div>
         </CardFooter>
       </Card>
