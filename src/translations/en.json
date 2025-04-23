@@ -131,7 +131,7 @@
     "youWon": "You Won!",
     "youLost": "You Lost",
     "spinning": "Spinning...",
-    "insufficientBalance": "Insufficient balance (${balance} available)",
+    "insufficientBalance": "Insufficient balance (${{balance}} available)",
     "potentialWin": "Potential Win",
     "recentResults": "Recent Results",
     "doubleOrNothing": "Double or nothing! Spin the wheel for a 50% chance to double your bet."

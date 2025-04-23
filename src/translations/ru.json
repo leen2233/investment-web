@@ -130,7 +130,7 @@
     "youWon": "Вы выиграли!",
     "youLost": "Вы проиграли",
     "spinning": "Крутим...",
-    "insufficientBalance": "Недостаточно средств (доступно ${balance})",
+    "insufficientBalance": "Недостаточно средств (доступно ${{balance}})",
     "potentialWin": "Возможный выигрыш",
     "recentResults": "Последние результаты",
     "doubleOrNothing": "Удвоение или ничего! Крутите колесо с шансом 50% удвоить ставку."

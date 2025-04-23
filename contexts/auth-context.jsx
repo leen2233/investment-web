@@ -28,7 +28,9 @@ export function AuthProvider({ children }) {
       const storedUser = localStorage.getItem("user");
 
       if (!token) {
-        navigate("/login");
+        if (pathname !== "/login" && pathname !== "/register") {
+          navigate("/login");
+        }
         setIsLoading(false);
         return;
       }

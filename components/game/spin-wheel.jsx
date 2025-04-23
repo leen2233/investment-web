@@ -22,12 +22,18 @@ export function SpinWheel() {
   const [betAmount, setBetAmount] = useState(10);
   const [potentialWin, setPotentialWin] = useState(20);
   const [showError, setShowError] = useState(false);
-  const { user, setUser } = useAuth();
+  const { user, setUser, checkAuth } = useAuth();
   const { t } = useTranslation();
 
   useEffect(() => {
     setPotentialWin(betAmount * 2);
   }, [betAmount]);
+
+  useEffect(() => {
+    if (!user) {
+      checkAuth();
+    }
+  }, []);
 
   const handleSpin = async () => {
     if (isSpinning) return;
