@@ -23,7 +23,7 @@ export default function GamePage() {
   }, []);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 ">
       <DashboardHeader
         title={t("nav.game")}
         description={t("game.description")}

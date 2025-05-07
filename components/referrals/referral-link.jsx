@@ -97,7 +97,8 @@ export function ReferralLink({ code }) {
 
             <div className="space-y-2">
               <h4 className="text-sm font-medium">{t("referrals.shareVia")}</h4>
-              <div className="flex gap-2">
+              {/* Modified this flex layout to be responsive */}
+              <div className="flex flex-wrap gap-2">
                 <motion.div
                   variants={socialButtonVariants}
                   initial="initial"
@@ -133,7 +134,7 @@ export function ReferralLink({ code }) {
                   initial="initial"
                   whileHover="hover"
                   whileTap="tap"
-                  className="flex-1"
+                  className="w-full sm:flex-1"
                 >
                   <Button
                     variant="outline"

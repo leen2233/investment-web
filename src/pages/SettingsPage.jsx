@@ -9,7 +9,7 @@ export default function SettingsPage() {
   const { t } = useTranslation();
 
   return (
-    <div className="container py-8 space-y-8">
+    <div className="py-8 space-y-8">
       <div className="flex items-center gap-4 mb-6">
         <Link to="/profile">
           <Button variant="ghost" size="icon">

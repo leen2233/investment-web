@@ -22,20 +22,20 @@ export default function ProfilePage() {
   }, []);
 
   return (
-    <div className="container py-8 space-y-8">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">{t("nav.profile")}</h1>
+    <div className="container py-5 space-y-8 px-4 sm:px-6">
+      <div className="flex justify-between items-center mb-6 w-full">
+        <h1 className="text-2xl sm:text-3xl font-bold">{t("nav.profile")}</h1>
         <Link to="/profile/settings">
           <Button variant="outline" className="flex items-center gap-2">
             <Settings className="h-4 w-4" />
-            <span>{t("nav.settings")}</span>
+            <span className="hidden sm:inline">{t("nav.settings")}</span>
           </Button>
         </Link>
       </div>
 
       <UserProfile user={user} />
 
-      <div className="grid gap-8 md:grid-cols-3">
+      <div className="grid gap-6 sm:gap-8 grid-cols-1 md:grid-cols-3">
         <UserBalance balance={user?.balance} />
         <ReferralProgram />
         {/* <Rewards /> */}

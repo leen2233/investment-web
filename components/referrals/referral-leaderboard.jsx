@@ -1,5 +1,4 @@
 "use client";
-
 import { motion } from "framer-motion";
 import { Trophy, Users } from "lucide-react";
 import {
@@ -58,7 +57,7 @@ export function ReferralLeaderboard({ topReferrers }) {
           </div>
           <CardDescription>{t("referrals.topReferrersDesc")}</CardDescription>
         </CardHeader>
-        <CardContent className="p-6">
+        <CardContent className="p-4 sm:p-6">
           <motion.div
             variants={listVariants}
             initial="hidden"
@@ -69,11 +68,11 @@ export function ReferralLeaderboard({ topReferrers }) {
               <motion.div
                 key={index}
                 variants={itemVariants}
-                className="flex items-center justify-between rounded-lg border border-border/40 p-3 hover:bg-secondary/30 transition-colors mb-2"
+                className="flex items-center justify-between rounded-lg border border-border/40 p-2 sm:p-3 hover:bg-secondary/30 transition-colors mb-2"
               >
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2 sm:gap-4 flex-1 min-w-0">
                   <div
-                    className={`flex h-8 w-8 items-center justify-center rounded-full ${
+                    className={`flex h-6 w-6 sm:h-8 sm:w-8 items-center justify-center rounded-full flex-shrink-0 ${
                       index + 1 === 1
                         ? "bg-yellow-500/80"
                         : index + 1 === 2
@@ -81,20 +80,22 @@ export function ReferralLeaderboard({ topReferrers }) {
                         : index + 1 === 3
                         ? "bg-amber-600/80"
                         : "bg-muted"
-                    } text-background font-bold`}
+                    } text-background font-bold text-xs sm:text-sm`}
                   >
                     {index + 1}
                   </div>
-                  <Avatar className="h-8 w-8 border border-border">
+                  <Avatar className="h-6 w-6 sm:h-8 sm:w-8 border border-border flex-shrink-0">
                     <AvatarFallback className="bg-neon-purple/20 text-neon-purple text-xs">
                       {referrer.username.charAt(0).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
-                  <div>
-                    <div className="font-medium">@{referrer.username}</div>
+                  <div className="min-w-0 flex-1">
+                    <div className="font-medium truncate">
+                      @{referrer.username}
+                    </div>
                     <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                      <Users className="h-3 w-3" />
-                      <span>
+                      <Users className="h-3 w-3 flex-shrink-0" />
+                      <span className="truncate">
                         {t("referrals.referralCount", {
                           count: referrer.referred_number,
                         })}
@@ -102,7 +103,7 @@ export function ReferralLeaderboard({ topReferrers }) {
                     </div>
                   </div>
                 </div>
-                <div className="text-sm font-medium text-neon-cyan">
+                <div className="text-sm font-medium text-neon-cyan ml-2 flex-shrink-0">
                   ${referrer.referral_earnings}
                 </div>
               </motion.div>

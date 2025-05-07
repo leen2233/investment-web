@@ -30,7 +30,7 @@ export default function DepositPage() {
   };
 
   return (
-    <div className="container py-8 space-y-6">
+    <div className="py-8 space-y-6">
       <div className="flex items-center gap-4">
         <Link to="/wallet">
           <Button variant="ghost" size="icon">

@@ -80,9 +80,18 @@ export function ProfitCalculator() {
                 <DollarSign className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
                   id="amount"
-                  type="number"
-                  value={amount}
-                  onChange={(e) => setAmount(Number(e.target.value))}
+                  type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  value={amount || ""}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (value === "") {
+                      setAmount(0);
+                    } else if (/^\d+$/.test(value)) {
+                      setAmount(Number(value));
+                    }
+                  }}
                   className="pl-10"
                 />
               </div>

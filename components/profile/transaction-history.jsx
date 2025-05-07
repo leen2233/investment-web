@@ -111,16 +111,31 @@ export function TransactionHistory() {
             defaultValue="all"
             value={activeTab}
             onValueChange={setActiveTab}
+            className="w-full"
           >
-            <TabsList className="grid w-full grid-cols-4">
-              <TabsTrigger value="all">{t("common.all")}</TabsTrigger>
-              <TabsTrigger value="deposit">
+            <TabsList className="w-full h-auto flex flex-wrap gap-2 bg-background p-0">
+              <TabsTrigger
+                value="all"
+                className="flex-1 data-[state=active]:bg-secondary px-3 py-2"
+              >
+                {t("common.all")}
+              </TabsTrigger>
+              <TabsTrigger
+                value="deposit"
+                className="flex-1 data-[state=active]:bg-secondary px-3 py-2"
+              >
                 {t("transactions.deposits")}
               </TabsTrigger>
-              <TabsTrigger value="withdrawal">
+              <TabsTrigger
+                value="withdrawal"
+                className="flex-1 data-[state=active]:bg-secondary px-3 py-2"
+              >
                 {t("transactions.withdrawals")}
               </TabsTrigger>
-              <TabsTrigger value="earning">
+              <TabsTrigger
+                value="earning"
+                className="flex-1 data-[state=active]:bg-secondary px-3 py-2"
+              >
                 {t("transactions.earnings")}
               </TabsTrigger>
             </TabsList>
@@ -133,16 +148,26 @@ export function TransactionHistory() {
                 className="mt-4"
               >
                 <div className="rounded-lg border border-border/40">
-                  <div className="grid grid-cols-4 gap-4 p-4 text-sm font-medium text-muted-foreground md:grid-cols-5">
-                    <div>{t("transactions.date")}</div>
-                    <div>{t("transactions.type")}</div>
-                    <div>{t("transactions.description")}</div>
-                    <div className="text-right">{t("transactions.amount")}</div>
-                    <div className="hidden md:block text-right">
-                      {t("transactions.status")}
+                  <div className="hidden md:flex items-center justify-between p-3 text-sm font-medium text-muted-foreground">
+                    <div className="flex flex-1 items-center gap-2 sm:gap-4">
+                      <div className="w-20 sm:w-32">
+                        {t("transactions.date")}
+                      </div>
+                      <div className="w-20 sm:w-24">
+                        {t("transactions.type")}
+                      </div>
+                      <div className="flex-1">
+                        {t("transactions.description")}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 sm:gap-4">
+                      <div>{t("transactions.amount")}</div>
+                      <div className="w-24 text-right">
+                        {t("transactions.status")}
+                      </div>
                     </div>
                   </div>
-                  <Separator className="bg-border/40" />
+                  <Separator className="bg-border/40 hidden md:block" />
                   <div className="divide-y divide-border/40">
                     <AnimatePresence>
                       {filteredTransactions.map((transaction, index) => (
@@ -153,33 +178,56 @@ export function TransactionHistory() {
                           initial="hidden"
                           animate="visible"
                           exit="exit"
-                          className="grid grid-cols-4 gap-4 p-4 text-sm hover:bg-secondary/30 transition-colors md:grid-cols-5"
+                          className="flex flex-col md:flex-row md:items-center justify-between p-3 text-sm hover:bg-secondary/30 transition-colors"
                         >
-                          <div>{formatDate(transaction.date)}</div>
-                          <div className="capitalize">
-                            {t(
-                              `transactions.${transaction.type.toLowerCase()}`
-                            )}
+                          <div className="flex flex-col md:flex-row md:flex-1 gap-2 md:items-center md:gap-4">
+                            <div className="flex items-center justify-between md:justify-start md:w-32">
+                              <div className="text-muted-foreground md:hidden">
+                                Date:
+                              </div>
+                              <div className="truncate">
+                                {formatDate(transaction.date)}
+                              </div>
+                            </div>
+                            <div className="flex items-center justify-between md:justify-start md:w-24">
+                              <div className="text-muted-foreground md:hidden">
+                                Type:
+                              </div>
+                              <div className="capitalize truncate">
+                                {t(
+                                  `transactions.${transaction.type.toLowerCase()}`
+                                )}
+                              </div>
+                            </div>
+                            <div className="hidden md:block flex-1 truncate">
+                              {transaction.description &&
+                                transaction.description.slice(0, 40)}
+                              ...
+                            </div>
                           </div>
-                          <div>
-                            {transaction.description.substring(0, 50)}...
-                          </div>
-                          <div
-                            className={`text-right font-medium ${
-                              isPositive(transaction.type)
-                                ? "text-neon-cyan"
-                                : "text-red-500"
-                            }`}
-                          >
-                            {isPositive(transaction.type) ? "+" : "-"}
-                            {transaction.amount}
-                          </div>
-                          <div className="hidden md:block text-right">
-                            <span className="rounded-full bg-green-500/10 px-2 py-1 text-xs font-medium text-green-500">
-                              {t(
-                                `transactions.statuses.${transaction.status.toLowerCase()}`
-                              )}
-                            </span>
+                          <div className="flex items-center justify-between mt-2 md:mt-0 md:gap-4">
+                            <div className="flex items-center gap-1 md:hidden">
+                              <div className="text-muted-foreground">
+                                Amount:
+                              </div>
+                            </div>
+                            <div
+                              className={`font-medium ${
+                                isPositive(transaction.type)
+                                  ? "text-neon-cyan"
+                                  : "text-red-500"
+                              }`}
+                            >
+                              {isPositive(transaction.type) ? "+" : "-"}
+                              {transaction.amount}
+                            </div>
+                            <div className="hidden md:block w-24 text-right">
+                              <span className="rounded-full bg-green-500/10 px-2 py-1 text-xs font-medium text-green-500">
+                                {t(
+                                  `transactions.statuses.${transaction.status.toLowerCase()}`
+                                )}
+                              </span>
+                            </div>
                           </div>
                         </motion.div>
                       ))}

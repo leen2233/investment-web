@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 
 export default function EditProfilePage() {
   return (
-    <div className="container py-8 space-y-8">
+    <div className="py-1 space-y-1">
       <div className="flex items-center gap-4 mb-6">
         <Link to="/profile">
           <Button variant="ghost" size="icon">
