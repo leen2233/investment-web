@@ -44,7 +44,7 @@ export default function DashboardPage() {
       <DashboardStats stats={stats} />
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <ProfitCalculator />
+        <ProfitCalculator plans={plans} />
         <RecentTransactions transactions={lastTransactions} />
       </div>
 

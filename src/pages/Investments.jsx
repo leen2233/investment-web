@@ -27,13 +27,12 @@ export default function InvestmentsPage() {
 
   return (
     <div className="space-y-6">
+      <ActiveInvestments investments={activeInvestments} />
       <DashboardHeader
         title={t("investments.availablePlans")}
         description={t("investments.choosePlan")}
       />
-
       <InvestmentPlansFull plans={plans} />
-      <ActiveInvestments investments={activeInvestments} />
     </div>
   );
 }

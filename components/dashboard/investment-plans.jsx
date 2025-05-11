@@ -1,16 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { api } from "@/lib/axios";
 
 export function InvestmentPlans({ plans }) {
   const [hoveredPlan, setHoveredPlan] = useState(null);
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isRussian = i18n.language === "ru";
+  const navigate = useNavigate();
 
   const containerVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -81,7 +85,7 @@ export function InvestmentPlans({ plans }) {
               <CardContent className="p-6 relative">
                 <div className="flex items-center justify-between">
                   <h3 className={`text-lg font-bold text-neon-${plan.color}`}>
-                    {t(`investments.plans.${plan.name}`)}
+                    {isRussian ? plan.name_ru : plan.name_en}
                   </h3>
                   {plan.popular && (
                     <Badge className="bg-neon-purple hover:bg-neon-purple/90">
@@ -91,7 +95,7 @@ export function InvestmentPlans({ plans }) {
                 </div>
 
                 <p className="mt-1 text-sm text-muted-foreground">
-                  {t(`investments.plans.${plan.name}Description`)}
+                  {isRussian ? plan.description_ru : plan.description_en}
                 </p>
 
                 <div className="mt-4 space-y-2">
@@ -103,10 +107,12 @@ export function InvestmentPlans({ plans }) {
                   </div>
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-muted-foreground">
-                      {t("investments.duration")}
+                      {t("investments.minimumDuration")}
                     </span>
                     <span className="font-medium">
-                      {t("investments.durationDays", { days: plan.duration })}
+                      {t("investments.durationDays", {
+                        days: plan.minimum_duration,
+                      })}
                     </span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
@@ -114,7 +120,7 @@ export function InvestmentPlans({ plans }) {
                       {t("investments.totalReturn")}
                     </span>
                     <span className="font-medium">
-                      {t("investments.roi", { percentage: plan.percentage })}
+                      {plan.percentage}% {t("investments.roi")}
                     </span>
                   </div>
                 </div>
@@ -122,7 +128,7 @@ export function InvestmentPlans({ plans }) {
                 <div className="mt-4 relative z-10">
                   <Button
                     className={`w-full bg-neon-${plan.color} hover:bg-neon-${plan.color}/90 hover:shadow-neon-${plan.color} transition-all duration-300`}
-                    onClick={() => alert(`Investing in plan ${index}`)}
+                    onClick={() => navigate(`/investments/${plan.id}/invest`)}
                   >
                     {t("investments.investNow")}
                   </Button>

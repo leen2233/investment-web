@@ -71,8 +71,9 @@
     "activePlans": "Active Plans",
     "availablePlans": "Investment Plans",
     "choosePlan": "Choose from our range of investment plans with different risk levels and returns.",
-    "roi": "ROI",
-    "duration": "Duration",
+    "roiShort": "ROI",
+    "roiFull": "Return on Investment",
+    "minimumDuration": "Minimum Duration",
     "minDeposit": "Minimum Deposit",
     "invest": "Invest Now",
     "planDetails": "Plan Details",
@@ -108,8 +109,14 @@
     },
     "minimum": "Minimum Investment",
     "durationDays": "{{days}} days",
-    "roi": "{{percentage}}% ROI",
-    "investNow": "Invest Now"
+    "investNow": "Invest Now",
+    "success": "Investment successful",
+    "successDescription": "You have successfully invested ${{amount}} in {{plan}}. Redirecting to investments...",
+    "selectedPlan": "Selected Plan",
+    "makeInvestment": "Invest Now",
+    "confirmInvestment": "Confirm Investment",
+
+    "initialAmount": "Initial Amount"
   },
   "game": {
     "play": "Play Now",
@@ -199,6 +206,7 @@
     "yearAgo": "1 year ago",
     "yearsAgo": "{{count}} years ago",
     "daily": "Daily",
+    "earning": "Earning",
     "days": "days",
     "fee": "fee",
     "all": "All",

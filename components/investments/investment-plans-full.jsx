@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { TrendingUp } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import {
   Card,
   CardContent,
@@ -16,9 +17,11 @@ import { Badge } from "@/components/ui/badge";
 import { RippleButton } from "@/components/ui/ripple-button";
 import { useTranslation } from "react-i18next";
 
-export function InvestmentPlansFull({ plans }) {
+export function InvestmentPlansFull({ plans = [], onSelectPlan }) {
   const [hoveredPlan, setHoveredPlan] = useState(null);
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isRussian = i18n.language === "ru";
+  const navigate = useNavigate();
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -61,6 +64,14 @@ export function InvestmentPlansFull({ plans }) {
   function capitalize(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
+
+  const handleInvestClick = (plan) => {
+    if (onSelectPlan) {
+      onSelectPlan(plan);
+    } else {
+      navigate(`/investments/${plan.id}/invest`);
+    }
+  };
 
   return (
     <motion.div
@@ -105,7 +116,7 @@ export function InvestmentPlansFull({ plans }) {
               <CardHeader
                 className={`bg-gradient-to-r from-neon-${plan.color} to-neon-${plan.color}/60 text-white`}
               >
-                <CardTitle>{plan.name}</CardTitle>
+                <CardTitle>{isRussian ? plan.name_ru : plan.name_en}</CardTitle>
                 <CardDescription
                   className={`text-neon-${
                     plan.color === "purple"
@@ -115,7 +126,7 @@ export function InvestmentPlansFull({ plans }) {
                       : "cyan"
                   }-100`}
                 >
-                  {plan.description}
+                  {isRussian ? plan.description_ru : plan.description_en}
                 </CardDescription>
               </CardHeader>
 
@@ -124,14 +135,14 @@ export function InvestmentPlansFull({ plans }) {
                   <div className="flex items-center gap-2">
                     <TrendingUp className={`h-5 w-5 text-neon-${plan.color}`} />
                     <span className="text-xl font-bold">
-                      {plan.percentage}% {t("common.daily")}
+                      {plan.percentage}% {t("common.earning")}
                     </span>
                   </div>
                   <Badge
                     variant="outline"
                     className={`bg-neon-${plan.color}/10`}
                   >
-                    {capitalize(plan.risk)}
+                    {capitalize(plan.risk)} risk
                   </Badge>
                 </div>
 
@@ -147,19 +158,10 @@ export function InvestmentPlansFull({ plans }) {
                     </div>
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-muted-foreground">
-                        {t("investments.duration")}
+                        {t("investments.minimum_duration")}
                       </span>
                       <span className="font-medium">
-                        {plan.duration} {t("common.days")}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">
-                        {t("investments.earlyWithdrawal")}
-                      </span>
-                      <span className="font-medium">
-                        {plan.early_withdrawal_time} {t("common.days")} (
-                        {plan.early_withdrawal_fee}% {t("common.fee")})
+                        {plan.minimum_duration} {t("common.days")}
                       </span>
                     </div>
                     <div className="flex items-center justify-between text-sm">
@@ -167,7 +169,7 @@ export function InvestmentPlansFull({ plans }) {
                         {t("investments.totalReturn")}
                       </span>
                       <span className="font-medium">
-                        {plan.percentage}% {t("investments.roi")}
+                        {plan.percentage}% {t("investments.roiShort")}
                       </span>
                     </div>
                   </div>
@@ -193,6 +195,7 @@ export function InvestmentPlansFull({ plans }) {
 
               <CardFooter className="bg-muted/30 px-6 py-4">
                 <RippleButton
+                  onClick={() => handleInvestClick(plan)}
                   className={`w-full bg-neon-${plan.color} hover:bg-neon-${
                     plan.color
                   }/90 hover:shadow-neon-${

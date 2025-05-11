@@ -6,6 +6,7 @@ import { Routes, Route } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import ProfilePage from "./pages/ProfilePage";
 import InvestmentsPage from "./pages/Investments";
+import InvestPage from "./pages/Invest";
 import GamePage from "./pages/GamePage";
 import WalletPage from "./pages/WalletPage";
 import ReferralsPage from "./pages/ReferralsPage";
@@ -63,6 +64,11 @@ export default function App() {
                   <Route path="/profile" element={<ProfilePage />} />
                   <Route path="/profile/edit" element={<EditProfilePage />} />
                   <Route path="/investments" element={<InvestmentsPage />} />
+                  <Route path="/investments/invest" element={<InvestPage />} />
+                  <Route
+                    path="/investments/:id/invest"
+                    element={<InvestPage />}
+                  />
                   <Route path="/game" element={<GamePage />} />
                   <Route path="/wallet" element={<WalletPage />} />
                   <Route

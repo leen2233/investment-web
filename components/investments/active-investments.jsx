@@ -1,8 +1,16 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
-import { Clock, DollarSign, AlertCircle } from "lucide-react";
+import {
+  Clock,
+  DollarSign,
+  AlertCircle,
+  Calendar,
+  Percent,
+  TrendingUp,
+  Shield,
+  Users,
+} from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 
 export function ActiveInvestments({ investments }) {
@@ -53,6 +61,15 @@ export function ActiveInvestments({ investments }) {
     } else {
       return t("common.yearsAgo", { count: Math.floor(diffDays / 365) });
     }
+  };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
   };
 
   const containerVariants = {
@@ -125,79 +142,152 @@ export function ActiveInvestments({ investments }) {
           initial="hidden"
           animate="visible"
         >
-          {investments.map((investment, index) => (
-            <motion.div
-              key={index}
-              custom={index}
-              variants={cardVariants}
-              initial="hidden"
-              animate="visible"
-            >
-              <Card className="glassmorphism overflow-hidden">
-                <CardContent className="p-6">
-                  <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                    <div className="space-y-1">
-                      <h4
-                        className={`font-semibold text-neon-${investment.color}`}
-                      >
-                        {investment.plan_name}
-                      </h4>
-                      <p className="text-sm text-muted-foreground">
-                        ${investment.initial_amount}{" "}
-                        {t("investments.startedOn")}{" "}
-                        {formatRelativeTime(investment.start_date)}
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-4">
-                      <div className="flex items-center gap-2">
-                        <Clock className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-sm">
-                          {investment.days_remaining}{" "}
-                          {t("investments.daysRemaining")}
-                        </span>
+          {investments.map((investment, index) => {
+            // Map the data structure correctly
+            const planName = investment.plan?.name_en || "";
+            const color = investment.plan?.color || "blue";
+            const risk = investment.plan?.risk || "medium";
+            const percentage = investment.plan?.percentage || 0;
+            const popularity = investment.plan?.popularity || 0;
+            const description = investment.plan?.description_en || "";
+
+            return (
+              <motion.div
+                key={index}
+                custom={index}
+                variants={cardVariants}
+                initial="hidden"
+                animate="visible"
+              >
+                <Card className="glassmorphism overflow-hidden">
+                  <CardContent className="p-6">
+                    <div className="flex flex-col gap-4">
+                      {/* Header section */}
+                      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                        <div className="space-y-1">
+                          <h4
+                            className={`text-lg font-bold text-neon-${color}`}
+                          >
+                            {planName}
+                          </h4>
+                          <p className="text-sm text-muted-foreground">
+                            {description}
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <DollarSign className="h-5 w-5 text-neon-green" />
+                          <span className="text-lg font-medium">
+                            {investment.current_value}
+                          </span>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <DollarSign className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-sm font-medium">
-                          ${investment.current_value}{" "}
-                          {t("investments.currentValue")}
-                        </span>
+
+                      {/* Main data grid */}
+                      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                        <div className="flex items-center gap-2">
+                          <DollarSign className="h-4 w-4 text-muted-foreground" />
+                          <div>
+                            <p className="text-xs text-muted-foreground">
+                              {t("investments.initialAmount")}
+                            </p>
+                            <p className="font-medium">
+                              ${investment.initial_amount}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <Percent className="h-4 w-4 text-muted-foreground" />
+                          <div>
+                            <p className="text-xs text-muted-foreground">
+                              {t("investments.roiFull")}
+                            </p>
+                            <p className="font-medium">{percentage}%</p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <Shield className="h-4 w-4 text-muted-foreground" />
+                          <div>
+                            <p className="text-xs text-muted-foreground">
+                              {t("investments.riskLevel")}
+                            </p>
+                            <p className="font-medium capitalize">{risk}</p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <Calendar className="h-4 w-4 text-muted-foreground" />
+                          <div>
+                            <p className="text-xs text-muted-foreground">
+                              {t("common.startDate")}
+                            </p>
+                            <p className="font-medium">
+                              {formatDate(investment.start_date)}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <Calendar className="h-4 w-4 text-muted-foreground" />
+                          <div>
+                            <p className="text-xs text-muted-foreground">
+                              {t("investments.endDate")}
+                            </p>
+                            <p className="font-medium">
+                              {formatDate(investment.end_date)}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <Clock className="h-4 w-4 text-muted-foreground" />
+                          <div>
+                            <p className="text-xs text-muted-foreground">
+                              {t("calculator.duration")}
+                            </p>
+                            <p className="font-medium">
+                              {investment.duration} {t("calculator.days")}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Progress bar */}
+                      <div className="mt-2">
+                        <div className="mb-1 flex items-center justify-between text-sm">
+                          <span>
+                            {investment.days_passed} / {investment.duration}{" "}
+                            {t("calculator.days")}
+                          </span>
+                          <span>
+                            {(
+                              (investment.days_passed / investment.duration) *
+                              100
+                            ).toFixed(0)}
+                            %
+                          </span>
+                        </div>
+                        <div className="h-2 w-full rounded-full bg-secondary">
+                          <motion.div
+                            className={`h-full rounded-full bg-gradient-to-r from-neon-${color} to-neon-${color}/60`}
+                            initial={{ width: 0 }}
+                            animate={{
+                              width: `${
+                                (investment.days_passed / investment.duration) *
+                                100
+                              }%`,
+                            }}
+                            transition={{ duration: 1, delay: 0.2 }}
+                          />
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="mt-4">
-                    <div className="mb-1 flex items-center justify-between text-sm">
-                      <span>{t("investments.progress")}</span>
-                      <span>
-                        {(100 / investment.duration) * investment.days_passed}%
-                      </span>
-                    </div>
-                    <div className="h-2 w-full rounded-full bg-secondary">
-                      <motion.div
-                        className={`h-full rounded-full bg-gradient-to-r from-neon-${investment.color} to-neon-${investment.color}/60`}
-                        initial={{ width: 0 }}
-                        animate={{
-                          width: `${
-                            (100 / investment.duration) * investment.days_passed
-                          }%`,
-                        }}
-                        transition={{ duration: 1, delay: 0.2 }}
-                      />
-                    </div>
-                  </div>
-                  <div className="mt-4 flex justify-end">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className={`border-neon-${investment.color}/50 hover:border-neon-${investment.color} hover:bg-neon-${investment.color}/10 transition-all duration-300`}
-                    >
-                      {t("investments.viewDetails")}
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
+                  </CardContent>
+                </Card>
+              </motion.div>
+            );
+          })}
         </motion.div>
       )}
     </motion.div>

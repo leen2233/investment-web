@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Calculator, DollarSign } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -17,32 +17,25 @@ import {
 } from "@/components/ui/select";
 import { useTranslation } from "react-i18next";
 
-export function ProfitCalculator() {
+export function ProfitCalculator({ plans }) {
   const [amount, setAmount] = useState(1000);
   const [duration, setDuration] = useState(30);
-  const [plan, setPlan] = useState("daily5");
-  const [calculatedReturn, setCalculatedReturn] = useState(1500);
+  const [plan, setPlan] = useState();
+  const [calculatedReturn, setCalculatedReturn] = useState(0);
   const { t } = useTranslation();
 
-  const handleCalculate = () => {
-    let rate = 0;
-    switch (plan) {
-      case "daily3":
-        rate = 0.03;
-        break;
-      case "daily5":
-        rate = 0.05;
-        break;
-      case "daily7":
-        rate = 0.07;
-        break;
-      default:
-        rate = 0.05;
+  useEffect(() => {
+    if (plans?.length > 0 && !plan) {
+      setPlan(plans[0].percentage);
     }
+  }, [plans, plan]);
 
-    const result = amount * (1 + rate * duration);
-    setCalculatedReturn(Math.round(result));
-  };
+  useEffect(() => {
+    if (amount && duration && plan) {
+      const result = amount + (amount / 100) * plan * (duration / 30);
+      setCalculatedReturn(result);
+    }
+  }, [amount, duration, plan]);
 
   const containerVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -121,21 +114,19 @@ export function ProfitCalculator() {
                   <SelectValue placeholder={t("calculator.selectPlan")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="daily3">
-                    {t("calculator.daily3Roi")}
-                  </SelectItem>
-                  <SelectItem value="daily5">
-                    {t("calculator.daily5Roi")}
-                  </SelectItem>
-                  <SelectItem value="daily7">
-                    {t("calculator.daily7Roi")}
-                  </SelectItem>
+                  {plans.map((plan) => {
+                    return (
+                      <SelectItem key={plan.id} value={plan.percentage}>
+                        {plan.percentage}% {t("investments.roi")}
+                      </SelectItem>
+                    );
+                  })}
                 </SelectContent>
               </Select>
             </div>
 
             <Button
-              onClick={handleCalculate}
+              onClick={() => {}}
               className="w-full bg-gradient-to-r from-neon-blue to-neon-purple hover:shadow-neon-blue transition-all duration-300"
             >
               {t("calculator.calculateProfit")}
@@ -157,8 +148,7 @@ export function ProfitCalculator() {
               <div className="text-xs text-muted-foreground">
                 {t("calculator.afterDays", {
                   days: duration,
-                  roi:
-                    plan === "daily3" ? "3%" : plan === "daily5" ? "5%" : "7%",
+                  roi: plan + "%",
                 })}
               </div>
             </motion.div>
